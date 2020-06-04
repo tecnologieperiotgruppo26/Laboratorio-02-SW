@@ -12,6 +12,7 @@
 # }
 
 import datetime
+import os
 import json
 
 ##
@@ -32,6 +33,7 @@ class Device(object):
 class DeviceManager(object):
 
   def __init__(self):
+    # Controllo json
     self.devices=[]
     self.n=0
 
