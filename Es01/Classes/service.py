@@ -1,3 +1,4 @@
+import json
 # Classe per la gestione dei Devices
 #
 # Formato json:
@@ -19,3 +20,7 @@ class Service(object):
         self.end_points['rest'] = rest
         self.end_points['mqtt'] = mqtt
         self.timestamp = datetime.datetime.now()
+        
+        # Store object in services.json
+        with open('../Database/services.json', "w") as file:
+            file.write(json.dumps(self))

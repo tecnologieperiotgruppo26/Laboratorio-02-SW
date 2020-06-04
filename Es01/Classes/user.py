@@ -18,3 +18,7 @@ class User():
         self.surname = surname
         self.email = email
         
+        # Store object in users.json
+        with open('../Database/users.json', "w") as file:
+            file.write(json.dumps(self))
+        
