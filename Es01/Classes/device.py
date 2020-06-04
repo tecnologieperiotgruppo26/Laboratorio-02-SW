@@ -33,7 +33,8 @@ class DeviceManager(object):
     self.devices=[]
     self.n=0
 
-  def addDevice(self, deviceID, rest, mqtt, resources):
+  def addDevice(self, rest, mqtt, resources):
+    deviceID = self.n
     device = Device(deviceID, rest, mqtt, resources)
     self.devices.append(device)
     self.n += 1
