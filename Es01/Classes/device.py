@@ -14,6 +14,9 @@
 import datetime
 import json
 
+##
+# Device object
+##
 class Device(object):
 
   def __init__(self, deviceID, rest, mqtt="", resources):
@@ -23,10 +26,9 @@ class Device(object):
     self.resources = resources
     self.timestamp = datetime.datetime.now()
 
-    # Store object in devices.json
-    with open('../Database/devices.json', "w") as file:
-      file.write(json.dumps(self)) 
-
+##
+# DeviceManager object
+##
 class DeviceManager(object):
 
   def __init__(self):
@@ -38,3 +40,7 @@ class DeviceManager(object):
     device = Device(deviceID, rest, mqtt, resources)
     self.devices.append(device)
     self.n += 1
+
+    # Store object in devices.json
+    with open('../Database/devices.json', "w") as file:
+      file.write(json.dumps(self.devices)) 
