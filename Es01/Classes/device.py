@@ -49,8 +49,8 @@ class DeviceManager(object):
     if os.path.exists('./Database/devices.json'):
       with open('./Database/devices.json') as file:
         self.devices = json.load(file)
-        # Non si può dare questo id perchè la lista potrebbe essere più corta dell'id al quale si era arrivati in precedenza
-        self.n = len(self.devices)
+        # Mantiene consistenza nella numerazione degli elementi
+        self.n = self.devices[-1].returnDeviceID + 1
     
     # Thread
     self.thread = threading.Thread(target=self.removeDevices)
