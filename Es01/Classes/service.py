@@ -1,4 +1,3 @@
-import json
 # Classe per la gestione dei Devices
 #
 # Formato json:
@@ -11,6 +10,10 @@ import json
 #   },
 #   timestamp: ""
 # }
+
+import datetime
+import os
+import json
 
 ##
 # Service object
