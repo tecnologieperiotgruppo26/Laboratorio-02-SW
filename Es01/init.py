@@ -10,7 +10,7 @@
 
 
 import cherrypy
-from './Classes/device.py' import *
+from Classes.device import *
 
 class Catalog(object): 
   exposed = True

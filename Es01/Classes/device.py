@@ -55,5 +55,4 @@ class DeviceManager(object):
     return json.dumps(self.devices)
 
   # Remove devices based on timestamp
-  def removeDevices(self, timestamp):
-    
+  # def removeDevices(self, timestamp):
