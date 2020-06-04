@@ -1,5 +1,3 @@
-import json
-
 # Classe per la gestione degli User
 #
 # Formato json:
@@ -10,6 +8,8 @@ import json
 #   email: ""
 # }
 
+import json
+
 class User():
     
     def __init__(self, userID, name, surname, email):
@@ -17,8 +17,15 @@ class User():
         self.name = name
         self.surname = surname
         self.email = email
-        
-        # Store object in users.json
-        with open('../Database/users.json', "w") as file:
-            file.write(json.dumps(self))
+
+class UserManager(object):
+
+  def __init__(self):
+    self.users = []
+    self.n = 0
+
+  def addUser(self, userID, name, surname, email):
+    user = User(userID, name, surname, email)
+    self.users.append(user)
+    self.n += 1
         

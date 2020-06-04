@@ -12,6 +12,9 @@ import json
 #   timestamp: ""
 # }
 
+##
+# Service object
+##
 class Service(object):
     
     def __init__(self, serviceID, description, rest, mqtt=""):
@@ -20,7 +23,34 @@ class Service(object):
         self.end_points['rest'] = rest
         self.end_points['mqtt'] = mqtt
         self.timestamp = datetime.datetime.now()
-        
-        # Store object in services.json
-        with open('../Database/services.json', "w") as file:
-            file.write(json.dumps(self))
+
+##
+# ServiceManager object
+##
+class ServiceManager(object):
+
+  def __init__(self):
+    self.services = []
+    self.n = 0
+
+  # Add service
+  def addService(self, description, rest, mqtt):
+    serviceID = self.n
+    service = Service(serviceID, description, rest, mqtt)
+    self.services.append(service)
+    self.n += 1
+
+    # Store object in devices.json
+    with open('../Database/services.json', "w") as file:
+      file.write(json.dumps(self.services))
+
+  # Get single device
+  def getSingleService(self, serviceID):
+    return json.dumps(self.services[serviceID])
+
+  # Get all devices
+  def getServices(self):
+    return json.dumps(self.services)
+
+  # Remove devices based on timestamp
+  # def removeDevices(self, timestamp):
