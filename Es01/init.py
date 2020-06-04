@@ -1,3 +1,13 @@
+# Documentazione ENDPOINT
+
+# Devices
+#
+# GET
+# - /devices                Retrieve all the registered devices
+# - /devices/:deviceId      Retrieve a specific device with a deviceID
+# POST
+# - /devices/new            Add a new device
+
 
 import cherrypy
 import json
