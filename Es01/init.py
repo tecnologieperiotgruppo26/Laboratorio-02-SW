@@ -10,15 +10,16 @@
 
 
 import cherrypy
+from './Classes/device.py' import *
 
 class Catalog(object): 
   exposed = True
 
-  self.deviceManager = deviceManager()
+  self.deviceManager = DeviceManager()
 
   def GET(self, *uri, **params):
     if uri[0]=="devices":
-      print("ok")
+      return self.deviceManager.getDevices()
 
   def POST(self, *uri, **params):
     if uri[0]=="devices":
