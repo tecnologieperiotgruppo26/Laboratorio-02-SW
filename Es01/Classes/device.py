@@ -26,3 +26,9 @@ class Device(object):
     # Store object in devices.json
     with open('../Database/devices.json', "w") as file:
       file.write(json.dumps(self)) 
+
+class DeviceManager(object):
+
+  def __init__(self):
+    self.devices=[]
+    self.n=0
