@@ -33,9 +33,13 @@ class Device(object):
 class DeviceManager(object):
 
   def __init__(self):
+    self.devices = []
+    self.n = 0
     # Controllo json
-    self.devices=[]
-    self.n=0
+    if os.path.exists('./Database/devices.json'):
+      with open('./Database/devices.json') as file:
+        self.devices = json.load(file)
+        self.n = len(self.devices)
 
   # Add device
   def addDevice(self, rest, mqtt, resources):

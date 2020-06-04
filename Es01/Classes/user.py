@@ -10,7 +10,6 @@
 
 import json
 
-
 ##
 # User object
 ##
@@ -30,6 +29,10 @@ class UserManager(object):
   def __init__(self):
     self.users = []
     self.n = 0
+    if os.path.exists('./Database/users.json'):
+      with open('./Database/users.json') as file:
+        self.users = json.load(file)
+        self.n = len(self.users)
 
   # Add user
   def addUser(self, userID, name, surname, email):
