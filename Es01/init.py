@@ -10,7 +10,6 @@
 
 
 import cherrypy
-import json
 
 class Catalog(object): 
   exposed = True

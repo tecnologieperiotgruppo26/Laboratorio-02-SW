@@ -12,6 +12,7 @@
 # }
 
 import datetime
+import json
 
 class Device(object):
 
@@ -22,4 +23,6 @@ class Device(object):
     self.resources = resources
     self.timestamp = datetime.datetime.now()
 
-  
+    # Store object in devices.json
+    with open('../Database/devices.json', "w") as file:
+      file.write(json.dumps(self)) 
