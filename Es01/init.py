@@ -10,12 +10,14 @@
 
 
 import cherrypy
+import os
 from Classes.device import *
 
 class Catalog(object): 
   exposed = True
 
-  self.deviceManager = DeviceManager()
+  def __init__(self):
+    self.deviceManager = DeviceManager()
 
   def GET(self, *uri, **params):
     if uri[0]=="devices":
