@@ -47,14 +47,14 @@ class UserManager(object):
     with open('../Database/users.json', "w") as file:
       file.write(json.dumps(self.users))
 
-    # Get single user
-    def getSingleUser(self, userID):
-        return json.dumps(self.users[userID])
+  # Get single user
+  def getSingleUser(self, userID):
+    return json.dumps(self.users[userID])
 
-    # Get all users
-    def getUsers(self):
-        return json.dumps(self.users)
+  # Get all users
+  def getUsers(self):
+    return json.dumps(self.users)
 
-    # Remove devices based on timestamp
-    # def removeDevices(self, timestamp):
+  # Remove devices based on timestamp
+  # def removeDevices(self, timestamp):
         

@@ -7,17 +7,28 @@
 # - /devices/:deviceId      Retrieve a specific device with a deviceID
 # POST
 # - /devices/new            Add a new device
+#
+#
+# Users
+#
+# GET
+# - /users                Retrieve all the registered devices
+# - /users/:userID      Retrieve a specific device with a deviceID
+# POST
+# - /users/new            Add a new device
 
 
 import cherrypy
 import os
 from Classes.device import *
+from Classes.user import *
 
 class Catalog(object): 
   exposed = True
 
   def __init__(self):
     self.deviceManager = DeviceManager()
+    self.userManager = UserManager()
 
   def GET(self, *uri, **params):
     if uri[0]=="devices":
@@ -25,6 +36,11 @@ class Catalog(object):
         return self.deviceManager.getSingleDevice(uri[1])
       else:
         return self.deviceManager.getDevices()
+    elif uri[0]=="users":
+      if uri[1]: # userID
+        return self.userManager.getSingleUser(uri[1])
+      else:
+        return self.userManager.getUsers()
 
   def POST(self, *uri, **params):
     if uri[0]=="devices":
