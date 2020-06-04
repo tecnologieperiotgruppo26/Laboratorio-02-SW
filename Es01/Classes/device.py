@@ -19,7 +19,7 @@ import json
 ##
 class Device(object):
 
-  def __init__(self, deviceID, rest, mqtt="", resources):
+  def __init__(self, deviceID, rest, resources, mqtt=""):
     self.deviceID = deviceID
     self.end_points['rest'] = rest
     self.end_points['mqtt'] = mqtt
