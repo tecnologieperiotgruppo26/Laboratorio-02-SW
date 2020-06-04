@@ -11,5 +11,15 @@
 #   timestamp: ""
 # }
 
+import datetime
+
 class Device(object):
+
+  def __init__(self, deviceID, rest, mqtt="", resources):
+    self.deviceID = deviceID
+    self.end_points['rest'] = rest
+    self.end_points['mqtt'] = mqtt
+    self.resources = resources
+    self.timestamp = datetime.datetime.now()
+
   
