@@ -12,7 +12,7 @@
 import cherrypy
 import json
 
-class StringGenerator(object): 
+class Catalog(object): 
   exposed = True
     
   def GET(self, *uri, **params):
@@ -32,6 +32,6 @@ if __name__ == '__main__':
       'tools.staticdir.root': os.path.abspath(os.getcwd()) 
     }
   }
-  cherrypy.tree.mount(StringGenerator(), '/', conf) 
+  cherrypy.tree.mount(Catalog(), '/', conf) 
   cherrypy.engine.start()
   cherrypy.engine.block()
