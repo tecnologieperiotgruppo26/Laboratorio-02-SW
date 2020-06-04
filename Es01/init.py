@@ -14,9 +14,8 @@ import cherrypy
 class Catalog(object): 
   exposed = True
 
-  deviceManager = deviceManager()
-  
-    
+  self.deviceManager = deviceManager()
+
   def GET(self, *uri, **params):
     if uri[0]=="devices":
       print("ok")

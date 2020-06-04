@@ -35,6 +35,7 @@ class DeviceManager(object):
     self.devices=[]
     self.n=0
 
+  # Add device
   def addDevice(self, rest, mqtt, resources):
     deviceID = self.n
     device = Device(deviceID, rest, mqtt, resources)
@@ -43,4 +44,12 @@ class DeviceManager(object):
 
     # Store object in devices.json
     with open('../Database/devices.json', "w") as file:
-      file.write(json.dumps(self.devices)) 
+      file.write(json.dumps(self.devices))
+
+  # Get single device
+  def getSingleDevice(self, deviceID):
+    return json.dumps(self.devices[deviceID])
+
+  # Get all devices
+  def getDevices(self):
+    return json.dumps(self.devices)
