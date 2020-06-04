@@ -53,3 +53,7 @@ class DeviceManager(object):
   # Get all devices
   def getDevices(self):
     return json.dumps(self.devices)
+
+  # Remove devices based on timestamp
+  def removeDevices(self, timestamp):
+    
