@@ -21,15 +21,15 @@ class Catalog(object):
 
   def GET(self, *uri, **params):
     if uri[0]=="devices":
-      return self.deviceManager.getDevices()
+      if uri[1]: # deviceID
+        return self.deviceManager.getSingleDevice(uri[1])
+      else:
+        return self.deviceManager.getDevices()
 
   def POST(self, *uri, **params):
     if uri[0]=="devices":
       if uri[1]=="new":
-        print("ok")
-      # with open('./freeboard/static/dashboard/dashboard.json', "w") as file:
-      #   print(f"{params['json_string']}")
-      #   file.write(params['json_string'])
+        self.deviceManager.addDevice(params['end_points']['rest'],params['end_points']['mqtt'],params['resources'])
 
 if __name__ == '__main__': 
   conf = {
