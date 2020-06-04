@@ -1,4 +1,3 @@
-import json
 # Classe per la gestione dei Devices
 #
 # Formato json:
@@ -11,6 +10,10 @@ import json
 #   },
 #   timestamp: ""
 # }
+
+import datetime
+import os
+import json
 
 ##
 # Service object
@@ -32,6 +35,11 @@ class ServiceManager(object):
   def __init__(self):
     self.services = []
     self.n = 0
+    # Controllo json
+    if os.path.exists('./Database/services.json'):
+      with open('./Database/services.json') as file:
+        self.services = json.load(file)
+        self.n = len(self.services)
 
   # Add service
   def addService(self, description, rest, mqtt):
