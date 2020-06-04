@@ -14,6 +14,7 @@
 import datetime
 import os
 import json
+import threading
 
 ##
 # Device object
@@ -25,12 +26,25 @@ class Device(object):
     self.end_points['rest'] = rest
     self.end_points['mqtt'] = mqtt
     self.resources = resources
-    self.timestamp = datetime.datetime.now()
+    self.timestamp = datetime.datetime.minute()
+    
+    # Thread
+    self.thread = threading.Thread(target=self.removeDevices)
+    self.thread.start()
+  
+  def getDeviceID(self):
+    return self.id
+    
+  def getTimestamp(self):
+    return self.timestamp
 
 ##
 # DeviceManager object
 ##
 class DeviceManager(object):
+  
+  # Tempo in minuti prima dell'eleminazione se non il timestampo non viene aggiornato
+  TIMEOUT = 2
 
   def __init__(self):
     self.devices = []
@@ -39,6 +53,7 @@ class DeviceManager(object):
     if os.path.exists('./Database/devices.json'):
       with open('./Database/devices.json') as file:
         self.devices = json.load(file)
+        # Non si può dare questo id perchè la lista potrebbe essere più corta dell'id al quale si era arrivati in precedenza
         self.n = len(self.devices)
 
   # Add device
@@ -61,4 +76,15 @@ class DeviceManager(object):
     return json.dumps(self.devices)
 
   # Remove devices based on timestamp
-  # def removeDevices(self, timestamp):
+  def removeDevices(self):
+    while True:
+      tmp = []
+      for device in self.devices:
+        if datetime.datetime.minute() - device.returnTimestamp < self.TIMEOUT:
+          tmp.append(device)
+      self.devices = tmp
+      if os.path.exists('./Database/devices.json'):
+        with open('./Database/devices.json', "w") as file:
+          json.dump(self.devices)
+        
+    
