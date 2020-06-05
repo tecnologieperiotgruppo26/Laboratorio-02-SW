@@ -48,6 +48,7 @@ class Catalog(object):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
     # Questo flag mi indica se uri ha lunghezza maggiore di 1
     flag = isUriMultiple(uri)
+    #errore qui sotto : IndexError: tuple index out of range, se faccio l'accesso a localhost ritora un 500
     if uri[0]=="devices" and flag:
       if isIDvalid(uri[1]): # deviceID
         return self.deviceManager.getSingleDevice(int(uri[1]))
@@ -60,6 +61,11 @@ class Catalog(object):
         return self.userManager.getSingleUser(uri[1])
       else:
         return self.userManager.getUsers()
+    #qui manca un else generico in cui si fanno cose, altrimenti esce un httperror500, ci aggiungo un else
+    #che lancia tutti i devices se arriva una get generica,
+    #todo: MODIFICARLA
+    else:
+      return self.deviceManager.getDevices()
 
   def POST(self, *uri, **params):
     # Il metodo POST accetta solo l'aggiunta di risorse al Catalog, per le informazioni si utilizza GET
@@ -82,5 +88,8 @@ if __name__ == '__main__':
   }
   cherrypy.tree.mount(Catalog(), '/', conf) 
   cherrypy.engine.start()
-  cherrypy.engine.block()
+  #cherrypy.engine.block()
+  input()
   Catalog().deviceManager.__del__()
+  cherrypy.engine.stop()
+  #Catalog().deviceManager.__del__()

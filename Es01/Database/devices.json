@@ -1,5 +1,5 @@
 {
-  "devices": [ 
+  "devices": [
     {
       "deviceID": "0",
       "end_points": {
@@ -7,7 +7,7 @@
         "mqtt": ""
       },
       "resources": [],
-      "timestamp": "1591368422.1072118"
+      "timestamp": "1591391014.2156138"
     }
   ]
 }
