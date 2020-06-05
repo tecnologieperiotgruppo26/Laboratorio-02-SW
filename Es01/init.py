@@ -43,10 +43,6 @@ class Catalog(object):
   def __init__(self):
     self.deviceManager = DeviceManager()
     self.userManager = UserManager()
-    with open('./Database/devices.json') as file:
-      print(file.read())
-      data = json.load(file)
-      print(data)
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST

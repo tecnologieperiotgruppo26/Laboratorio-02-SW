@@ -45,14 +45,17 @@ class DeviceManager(object):
   
   # Tempo in minuti prima dell'eleminazione se il timestamp non viene aggiornato
   TIMEOUT = 2
+  tmp={}
 
   def __init__(self):
     self.devices = []
     self.n = 0
     # Controllo json
-    if os.path.exists('../Database/devices.json'):
-      with open('../Database/devices.json') as file:
-        self.devices = json.load(file)
+    if os.path.exists('Database/devices.json'):
+      with open('Database/devices.json') as f:
+        tmp = json.load(f)
+        print(tmp)
+        self.devices = tmp.get('devices')
         print(self.devices)
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
@@ -67,7 +70,7 @@ class DeviceManager(object):
   def __del__(self):
     self.thread.join()
     self.lock.acquire()
-    with open('../Database/devices.json', "w") as file:
+    with open('Database/devices.json', "w") as file:
       file.write(json.dumps(self.devices))
     self.lock.release()
     
@@ -80,7 +83,7 @@ class DeviceManager(object):
 
     # Store object in devices.json
     self.lock.acquire()
-    with open('../Database/devices.json', "w") as file:
+    with open('Database/devices.json', "w") as file:
       file.write(json.dumps(self.devices))
     self.lock.release()
 
@@ -107,8 +110,8 @@ class DeviceManager(object):
       self.devices = tmp
       
       self.lock.acquire()
-      if os.path.exists('../Database/devices.json'):
-        with open('../Database/devices.json', "w") as file:
+      if os.path.exists('Database/devices.json'):
+        with open('Database/devices.json', "w") as file:
           json.dump(self.devices)
       self.lock.release()
     time.sleep(self.TIMEOUT*60)
