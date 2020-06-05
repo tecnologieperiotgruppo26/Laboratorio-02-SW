@@ -52,8 +52,8 @@ class DeviceManager(object):
     # Controllo json
     if os.path.exists('../Database/devices.json'):
       with open('../Database/devices.json') as file:
-        self.devices = json.load(file.read())
-        print(file.read())
+        self.devices = json.load(file)
+        print(self.devices)
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
           self.n = self.devices[-1].returnDeviceID + 1
