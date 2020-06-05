@@ -61,7 +61,15 @@ class DeviceManager(object):
     self.lock = threading.Lock()
     self.thread = threading.Thread(target=self.removeDevices)
     self.thread.start()
-
+  
+  # Stop Execution
+  def __del__(self):
+    self.thread.join()
+    self.lock.acquire()
+    with open('../Database/devices.json', "w") as file:
+      file.write(json.dumps(self.devices))
+    self.lock.release()
+    
   # Add device
   def addDevice(self, timestamp, rest, resources, mqtt=""):
     deviceID = self.n
@@ -109,9 +117,9 @@ class DeviceManager(object):
     for device in self.devices:
       if device.returnDeviceID == deviceID:
         device.updateAtrr(timestamp)
-        return 200
     else:
-      # Da definire come si vuole gestire
+      # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa 
+      # lasciare al caso l'avvenuta conferma
       return 404
   
 # TESTING
