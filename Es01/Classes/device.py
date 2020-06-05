@@ -24,8 +24,8 @@ class Device(object):
 
   def __init__(self, deviceID, timestamp, rest, resources, mqtt=""):
     self.deviceID = deviceID
-    self.end_points['rest'] = rest
-    self.end_points['mqtt'] = mqtt
+    self.end_points.rest = rest
+    self.end_points.rest = mqtt
     self.resources = resources
     self.timestamp = timestamp
   
@@ -45,7 +45,7 @@ class DeviceManager(object):
   
   # Tempo in minuti prima dell'eleminazione se il timestamp non viene aggiornato
   TIMEOUT = 2
-  tmp={}
+  tmp=[]
 
   def __init__(self):
     self.devices = []
@@ -53,13 +53,12 @@ class DeviceManager(object):
     # Controllo json
     if os.path.exists('Database/devices.json'):
       with open('Database/devices.json') as f:
-        tmp = json.load(f)
-        print(tmp)
-        self.devices = tmp.get('devices')
-        print(self.devices)
+        tmp = json.load(f).get('devices')
+        for obj in tmp:
+          self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['end_points']['rest'],obj['resources'],obj['end_points']['mqtt']))
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
-          self.n = self.devices[-1].returnDeviceID + 1
+          self.n = self.devices[-1].getDeviceID() + 1
     
     # Thread
     self.lock = threading.Lock()
