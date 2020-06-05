@@ -34,7 +34,7 @@ if __name__ == "__main__":
     print("3 - Retrieve all users")
     print("4 - Retrieve single user")
     print("5 - Exit")
-    input_val = input("Enter command number: ")
+    input_val = int(input("Enter command number: "))
 
     if (input_val==0):
       getMessageBroker()
