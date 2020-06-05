@@ -20,8 +20,22 @@
 
 import cherrypy
 import os
+import datetime
 from Classes.device import *
 from Classes.user import *
+
+
+def isIDvalid(string):
+  try:
+    int(string)
+    return True
+  except:
+    return False
+  
+def isUriMultiple(uri):
+  if len(uri) > 1:
+    return True
+  return False
 
 class Catalog(object): 
   exposed = True
@@ -31,10 +45,15 @@ class Catalog(object):
     self.userManager = UserManager()
 
   def GET(self, *uri, **params):
-    if uri[0]=="devices":
-      if uri[1]: # deviceID
-        return self.deviceManager.getSingleDevice(uri[1])
+    # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
+    # Questo flag mi indica se uri ha lunghezza maggiore di 1
+    flag = isUriMultiple(uri)
+    if uri[0]=="devices" and flag:
+      if flag and isIDvalid(uri[1]): # deviceID
+        return self.deviceManager.getSingleDevice(int(uri[1]))
       else:
+        raise cherrypy.HTTPError(404, "Bad Request!")
+    elif uri[0]=="devices":
         return self.deviceManager.getDevices()
     elif uri[0]=="users":
       if uri[1]: # userID
@@ -43,9 +62,15 @@ class Catalog(object):
         return self.userManager.getUsers()
 
   def POST(self, *uri, **params):
-    if uri[0]=="devices":
+    # Il metodo POST accetta solo l'aggiunta di risorse al Catalog, per le informazioni si utilizza GET
+    # Questo flag mi indica se uri ha lunghezza maggiore di 1
+    flag = isUriMultiple(uri)
+    if uri[0]=="devices" and flag:
       if uri[1]=="new":
-        self.deviceManager.addDevice(params['end_points']['rest'],params['end_points']['mqtt'],params['resources'])
+        self.deviceManager.addDevice(datetime.datetime.now(), params['end_points']['rest'],params['resources'],params['end_points']['mqtt'])
+      else:
+        raise cherrypy.HTTPError(404, "Bad Request!")
+        
 
 if __name__ == '__main__': 
   conf = {
