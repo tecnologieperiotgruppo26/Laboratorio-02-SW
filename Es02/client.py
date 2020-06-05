@@ -10,7 +10,7 @@ def getMessageBroker():
 
 def getAllDevices():
   r = requests.get('http://localhost:8080/devices')
-  print(r.json)
+  print(r.text)
 
 def getSingleDevice(deviceID):
   r = requests.get(f"http://localhost:8080/devices/{deviceID}")
@@ -21,7 +21,7 @@ def getAllUsers():
   print(r.json)
 
 def getSingleUser(userID):
-  r = requests.get(f"http://localhost:8080/users/{deviceID}")
+  r = requests.get(f"http://localhost:8080/users/{userID}")
   print(r.json)
 
 if __name__ == "__main__":

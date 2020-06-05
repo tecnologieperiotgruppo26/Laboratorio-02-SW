@@ -1,9 +1,13 @@
-[{
-  "deviceID": "0",
-  "end_points": {
-    "rest": "",
-    "mqtt": ""
-  },
-  "resources": [],
-  "timestamp": "2020-06-05 12:50:10.775159 "
-}]
+{
+  "devices": [ 
+    {
+      "deviceID": "0",
+      "end_points": {
+        "rest": "",
+        "mqtt": ""
+      },
+      "resources": [],
+      "timestamp": "2020-06-05 12:50:10.775159 "
+    }
+  ]
+}

@@ -54,7 +54,7 @@ class Catalog(object):
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     elif uri[0]=="devices":
-        return self.deviceManager.getDevices()
+      return self.deviceManager.getDevices()
     elif uri[0]=="users":
       if uri[1]: # userID
         return self.userManager.getSingleUser(uri[1])
