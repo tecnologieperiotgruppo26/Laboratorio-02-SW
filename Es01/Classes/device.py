@@ -43,7 +43,7 @@ class Device(object):
 class DeviceManager(object):
   
   # Tempo in minuti prima dell'eleminazione se il timestamp non viene aggiornato
-  TIMEOUT = 2
+  TIMEOUT = 2*60
   tmp=[]
 
   def __init__(self):
@@ -69,7 +69,7 @@ class DeviceManager(object):
     self.thread.join()
     self.lock.acquire()
     with open('Database/devices.json', "w") as file:
-      file.write(json.dumps(self.devices))
+      json.dumps(self.devices, file)
     self.lock.release()
     
   # Add device
@@ -82,13 +82,13 @@ class DeviceManager(object):
     # Store object in devices.json
     self.lock.acquire()
     with open('Database/devices.json', "w") as file:
-      file.write(json.dumps(self.devices))
+      json.dump(self.devices, file)
     self.lock.release()
 
   # Get single device
   def getSingleDevice(self, deviceID):
     for device in self.devices:
-      if device.returnDeviceID == deviceID:
+      if device.getDeviceID() == deviceID:
         return json.dumps(device)
     else:
       return "{}"
@@ -103,27 +103,24 @@ class DeviceManager(object):
       tmp = []
       # Vengono mantenute solo le risorse che non hanno fatte scadere TIMEOUT
       for device in self.devices:
-        if datetime.datetime.minute - device.getTimestamp.minute < self.TIMEOUT:
+        if time.time() - float(device.getTimestamp()) < self.TIMEOUT:
           tmp.append(device)
       self.devices = tmp
       
       self.lock.acquire()
       if os.path.exists('Database/devices.json'):
         with open('Database/devices.json', "w") as file:
-          json.dump(self.devices)
+          json.dump(self.devices, file)
       self.lock.release()
-    time.sleep(self.TIMEOUT*60)
+      time.sleep(self.TIMEOUT)
 
   # Update an existin device
   def updateDevice(self, deviceID, timestamp): # per altre info basta aggiungere altri argomenti al metodo
     for device in self.devices:
-      if device.returnDeviceID == deviceID:
+      if device.getDeviceID() == deviceID:
         device.updateAtrr(timestamp)
     else:
       # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa 
       # lasciare al caso l'avvenuta conferma
       return 404
   
-# TESTING
-if __name__ == "__main__":
-  print(datetime.datetime.now().minute)

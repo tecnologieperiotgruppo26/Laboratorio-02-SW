@@ -67,7 +67,7 @@ class Catalog(object):
     flag = isUriMultiple(uri)
     if uri[0]=="devices" and flag:
       if uri[1]=="new":
-        self.deviceManager.addDevice(datetime.datetime.now(), params['end_points']['rest'],params['resources'],params['end_points']['mqtt'])
+        self.deviceManager.addDevice(time.time(), params['end_points']['rest'],params['resources'],params['end_points']['mqtt'])
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
         
