@@ -1,0 +1,13 @@
+{
+  "devices": [ 
+    {
+      "deviceID": "0",
+      "end_points": {
+        "rest": "",
+        "mqtt": ""
+      },
+      "resources": [],
+      "timestamp": "2020-06-05"
+    }
+  ]
+}

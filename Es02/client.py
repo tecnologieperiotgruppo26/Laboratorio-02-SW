@@ -4,24 +4,24 @@
 
 import requests
 
-def getMessageBroker(self):
+def getMessageBroker():
   r = requests.get('http://localhost:8080/messagebroker')
   print(r.json)
 
-def getAllDevices(self):
+def getAllDevices():
   r = requests.get('http://localhost:8080/devices')
-  print(r.json)
+  print(r.text)
 
-def getSingleDevice(self, deviceID):
+def getSingleDevice(deviceID):
   r = requests.get(f"http://localhost:8080/devices/{deviceID}")
   print(r.json)
 
-def getAllUsers(self):
+def getAllUsers():
   r = requests.get('http://localhost:8080/users')
   print(r.json)
 
-def getSingleUser(self, userID):
-  r = requests.get(f"http://localhost:8080/users/{deviceID}")
+def getSingleUser(userID):
+  r = requests.get(f"http://localhost:8080/users/{userID}")
   print(r.json)
 
 if __name__ == "__main__":
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     print("3 - Retrieve all users")
     print("4 - Retrieve single user")
     print("5 - Exit")
-    input_val = input("Enter command number: ")
+    input_val = int(input("Enter command number: "))
 
     if (input_val==0):
       getMessageBroker()

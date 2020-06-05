@@ -43,18 +43,22 @@ class Catalog(object):
   def __init__(self):
     self.deviceManager = DeviceManager()
     self.userManager = UserManager()
+    with open('./Database/devices.json') as file:
+      print(file.read())
+      data = json.load(file)
+      print(data)
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
     # Questo flag mi indica se uri ha lunghezza maggiore di 1
     flag = isUriMultiple(uri)
     if uri[0]=="devices" and flag:
-      if flag and isIDvalid(uri[1]): # deviceID
+      if isIDvalid(uri[1]): # deviceID
         return self.deviceManager.getSingleDevice(int(uri[1]))
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     elif uri[0]=="devices":
-        return self.deviceManager.getDevices()
+      return self.deviceManager.getDevices()
     elif uri[0]=="users":
       if uri[1]: # userID
         return self.userManager.getSingleUser(uri[1])
@@ -83,3 +87,4 @@ if __name__ == '__main__':
   cherrypy.tree.mount(Catalog(), '/', conf) 
   cherrypy.engine.start()
   cherrypy.engine.block()
+  Catalog().deviceManager.__del__()
