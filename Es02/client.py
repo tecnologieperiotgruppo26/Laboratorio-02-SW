@@ -4,23 +4,23 @@
 
 import requests
 
-def getMessageBroker(self):
+def getMessageBroker():
   r = requests.get('http://localhost:8080/messagebroker')
   print(r.json)
 
-def getAllDevices(self):
+def getAllDevices():
   r = requests.get('http://localhost:8080/devices')
   print(r.json)
 
-def getSingleDevice(self, deviceID):
+def getSingleDevice(deviceID):
   r = requests.get(f"http://localhost:8080/devices/{deviceID}")
   print(r.json)
 
-def getAllUsers(self):
+def getAllUsers():
   r = requests.get('http://localhost:8080/users')
   print(r.json)
 
-def getSingleUser(self, userID):
+def getSingleUser(userID):
   r = requests.get(f"http://localhost:8080/users/{deviceID}")
   print(r.json)
 
