@@ -22,10 +22,9 @@ import time
 ##
 class Device(object):
 
-  def __init__(self, deviceID, timestamp, rest, resources, mqtt=""):
+  def __init__(self, deviceID, timestamp, resources, rest="", mqtt=""):
     self.deviceID = deviceID
-    self.end_points.rest = rest
-    self.end_points.rest = mqtt
+    self.end_points= {"rest" : rest, "mqtt" : mqtt}
     self.resources = resources
     self.timestamp = timestamp
   
@@ -33,7 +32,7 @@ class Device(object):
     self.timestamp = timestamp
   
   def getDeviceID(self):
-    return self.id
+    return self.deviceID
     
   def getTimestamp(self):
     return self.timestamp
@@ -55,10 +54,10 @@ class DeviceManager(object):
       with open('Database/devices.json') as f:
         tmp = json.load(f).get('devices')
         for obj in tmp:
-          self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['end_points']['rest'],obj['resources'],obj['end_points']['mqtt']))
+          self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['resources'],obj['end_points']['rest'],obj['end_points']['mqtt']))
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
-          self.n = self.devices[-1].getDeviceID() + 1
+          self.n = int(self.devices[-1].getDeviceID()) + 1
     
     # Thread
     self.lock = threading.Lock()
@@ -104,7 +103,7 @@ class DeviceManager(object):
       tmp = []
       # Vengono mantenute solo le risorse che non hanno fatte scadere TIMEOUT
       for device in self.devices:
-        if datetime.datetime.minute() - device.returnTimestamp.minute < self.TIMEOUT:
+        if datetime.datetime.minute - device.getTimestamp.minute < self.TIMEOUT:
           tmp.append(device)
       self.devices = tmp
       
