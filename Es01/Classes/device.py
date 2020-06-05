@@ -53,7 +53,7 @@ class DeviceManager(object):
     if os.path.exists('./../Database/devices.json'):
       with open('./../Database/devices.json') as file:
         print(file.read())
-        self.devices = json.load(file)
+        self.devices = json.load(file['devices'])
         print(self.devices)
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
