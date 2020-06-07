@@ -1,13 +1,1 @@
-{
-  "devices": [
-    {
-      "deviceID": "0",
-      "end_points": {
-        "rest": "",
-        "mqtt": ""
-      },
-      "resources": [],
-      "timestamp": "1591391014.2156138"
-    }
-  ]
-}
+{"devices": []}

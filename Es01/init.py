@@ -61,11 +61,14 @@ class Catalog(object):
         return self.userManager.getSingleUser(uri[1])
       else:
         return self.userManager.getUsers()
-    #qui manca un else generico in cui si fanno cose, altrimenti esce un httperror500, ci aggiungo un else
-    #che lancia tutti i devices se arriva una get generica,
-    #todo: MODIFICARLA
+    #else generico per "homepage"
     else:
-      return self.deviceManager.getDevices()
+      menu = "GET httpREST\n" \
+             "/devices -> retrieve all the registered devices\n" \
+             "/devides/:deviceId -> retrieve a specific device\n" \
+             "/users -> retrieve all the registered users\n" \
+             "/users/:urserId -> retrieve a specific user\n"
+      return menu
 
   def POST(self, *uri, **params):
     # Il metodo POST accetta solo l'aggiunta di risorse al Catalog, per le informazioni si utilizza GET
