@@ -37,6 +37,10 @@ class Device(object):
   def getTimestamp(self):
     return self.timestamp
 
+  """
+  la funzione toDict serve a riportare correttamente tutti i parametri della classe device
+  per essere serializzata meglio dal json    
+  """
   def toDict(self):
     dict = {"deviceID" : "{}".format(self.deviceID),
             "end_points": {"rest" : "{}".format(self.end_points["rest"]),
@@ -56,7 +60,7 @@ class Device(object):
 class DeviceManager(object):
 
   # Tempo in minuti prima dell'eleminazione se il timestamp non viene aggiornato
-  TIMEOUT = 24*60   #prova, da reimpostare a 2
+  TIMEOUT = 60*60   #prova, da reimpostare a 2
   tmp=[]
 
   def __init__(self):
@@ -74,21 +78,14 @@ class DeviceManager(object):
 
     # Thread
     self.lock = threading.Lock()
-    #qui inserisco il flag stop_thread, aggiunto come campo per bloccare il while true del thread,
-    #altrimenti ho paura che essendo sempre "impegnato" non rientrerà mai nella join
-    #perchè dovrebbe rientrare solo alla fine della sua run. che con il while true non termina mai
-    self.thread = threading.Thread(target=self.removeDevices) #, args =(lambda : stop_thread, )
+    self.thread = threading.Thread(target=self.removeDevices)
     self.thread.start()
-    """
-    facendo partire subito il thread rimuove tutti i devices
-    """
 
   # Stop Execution
   def __del__(self):     #questa era la __DEL__, perchè è stato fatto un override?
     self.thread.join(1)
     self.lock.acquire()
-    print("Sono nella finish")
-    print(f"{self.devices}")
+    print(f"{self.getDevicesForJSon()}")
     with open('Database/devices.json', "w") as file:
       json.dump(self.getDevicesForJSon(), file)   #c'era la self.devices
     self.lock.release()
@@ -109,17 +106,20 @@ class DeviceManager(object):
 
   # Get single device
   def getSingleDevice(self, deviceID):
-    print("Sono nella getSingleDevices")
     for device in self.devices:
-      if device.getDeviceID() == deviceID:
-        return json.dumps(device)
-    else:
-      return "{}"
+      if int(device.getDeviceID()) == deviceID:
+        return json.dumps(device.toDict())      #return json.dumps(device)  implemento il dict
+    return "{}"
 
   # Get all devices
   def getDevices(self):
-    return json.dumps(self.devices)
+    return json.dumps(self.getDevicesForJSon())     #return json.dumps(self.devices), implemento json
 
+  """
+  getDeviceForJSon ritorna un dizionario con la lista di tutti i devices impostati come dict
+  per essere trasformati in json
+  quindi un dizionario che comprende una lista di dizionari. json controllato con jsonlint
+  """
   def getDevicesForJSon(self):
     listOfDevicesAsDicts = []
     for device in self.devices:
@@ -154,6 +154,9 @@ class DeviceManager(object):
       # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa
       # lasciare al caso l'avvenuta conferma
       return 404
+
+  def getNumberOfDevices(self):
+    return int(self.n)
 
 #File "C:\Users\emanu\Desktop\PoliTo\Semestre 4-2\IoT\Laboratorio\Laboratorio-02-SW\Es01\Classes\device.py", line 115, in removeDevices
 #    json.dump(self.devices, file)

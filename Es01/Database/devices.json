@@ -1,1 +1,1 @@
-{"devices": []}
+{"devices": [{"deviceID": "0", "end_points": {"rest": "", "mqtt": ""}, "resources": "[]", "timestamp": "1591568186.7376063"}, {"deviceID": "1", "end_points": {"rest": "", "mqtt": ""}, "resources": "[]", "timestamp": "1591568196.7376063"}]}

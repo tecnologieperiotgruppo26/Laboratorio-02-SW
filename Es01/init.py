@@ -49,26 +49,30 @@ class Catalog(object):
     # Questo flag mi indica se uri ha lunghezza maggiore di 1
     flag = isUriMultiple(uri)
     #errore qui sotto : IndexError: tuple index out of range, se faccio l'accesso a localhost ritora un 500
-    if uri[0]=="devices" and flag:
-      if isIDvalid(uri[1]): # deviceID
-        return self.deviceManager.getSingleDevice(int(uri[1]))
-      else:
-        raise cherrypy.HTTPError(404, "Bad Request!")
-    elif uri[0]=="devices":
-      return self.deviceManager.getDevices()
-    elif uri[0]=="users":
-      if uri[1]: # userID
-        return self.userManager.getSingleUser(uri[1])
-      else:
-        return self.userManager.getUsers()
+    if uri:
+      if uri[0]=="devices" and flag:
+        if isIDvalid(uri[1]): # deviceID
+          if int(uri[1]) < self.deviceManager.getNumberOfDevices():
+            return self.deviceManager.getSingleDevice(int(uri[1]))
+          else:
+            raise cherrypy.HTTPError(404, "Bad Request!")
+        else:
+          raise cherrypy.HTTPError(404, "Bad Request!")
+      elif uri[0]=="devices":
+        return self.deviceManager.getDevices()
+      elif uri[0]=="users":
+        if uri[1]: # userID
+          return self.userManager.getSingleUser(uri[1])
+        else:
+          return self.userManager.getUsers()
     #else generico per "homepage"
     else:
-      menu = "GET httpREST\n" \
-             "/devices -> retrieve all the registered devices\n" \
-             "/devides/:deviceId -> retrieve a specific device\n" \
-             "/users -> retrieve all the registered users\n" \
-             "/users/:urserId -> retrieve a specific user\n"
-      return menu
+      menu = "GET httpREST<br/>" \
+             "<dl>/devices -> retrieve all the registered devices<br/>" \
+             "<dl>/devices/[deviceId] -> retrieve a specific device<br/>" \
+             "<dl>/users -> retrieve all the registered users<br/>" \
+             "<dl>/users/:urserId -> retrieve a specific user<br/>"
+      return "{}".format(menu)
 
   def POST(self, *uri, **params):
     # Il metodo POST accetta solo l'aggiunta di risorse al Catalog, per le informazioni si utilizza GET
