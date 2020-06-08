@@ -148,7 +148,7 @@ class DeviceManager(object):
   def updateDevice(self, deviceID, timestamp): # per altre info basta aggiungere altri argomenti al metodo
     for device in self.devices:
       if device.getDeviceID() == deviceID:
-        device.updateAtrr(timestamp)
+        device.updateAtrr(time.time())
     else:
       # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa
       # lasciare al caso l'avvenuta conferma
