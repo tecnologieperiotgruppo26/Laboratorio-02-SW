@@ -85,9 +85,9 @@ class DeviceManager(object):
   def __del__(self):     #questa era la __DEL__, perchè è stato fatto un override?
     self.thread.join(1)
     self.lock.acquire()
-    print(f"{self.getDevicesForJSon()}")
+    print(f"{self.getDevicesForJson()}")
     with open('Database/devices.json', "w") as file:
-      json.dump(self.getDevicesForJSon(), file)   #c'era la self.devices
+      json.dump(self.getDevicesForJson(), file)   #c'era la self.devices
     self.lock.release()
 
   # Add device
@@ -100,7 +100,7 @@ class DeviceManager(object):
     # Store object in devices.json
     self.lock.acquire()
     with open('Database/devices.json', "w") as file:
-      json.dump(self.getDevicesForJSon(), file)#      json.dump(self.devices, file)
+      json.dump(self.getDevicesForJson(), file)#      json.dump(self.devices, file)
     self.lock.release()
 
   # Get single device
@@ -140,7 +140,7 @@ class DeviceManager(object):
       print("Sono nella removeDevices")
       if os.path.exists('Database/devices.json'):
         with open('Database/devices.json', "w") as file:
-          json.dump(self.getDevicesForJSon(), file)#      json.dump(self.devices, file)
+          json.dump(self.getDevicesForJson(), file)#      json.dump(self.devices, file)
       self.lock.release()
       time.sleep(self.TIMEOUT)#perchè dorme per timeout?
 
