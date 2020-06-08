@@ -75,6 +75,9 @@ class DeviceManager(object):
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
           self.n = int(self.devices[-1].getDeviceID()) + 1
+    else:
+      with open('Database/devices.json', "w") as f:
+        f.write('{"devices":[]}')
 
     # Thread
     self.lock = threading.Lock()

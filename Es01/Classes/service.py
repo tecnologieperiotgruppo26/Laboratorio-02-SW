@@ -67,7 +67,10 @@ class ServiceManager(object):
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.services):
           self.n = int(self.services[-1].getServiceID()) + 1
-
+  else:
+      with open('Database/services.json', "w") as f:
+        f.write('{"services":[]}')
+        
   # Thread 
   self.lock = threading.Lock()
   self.thread = threading.Thread(target=self.removeServices)
