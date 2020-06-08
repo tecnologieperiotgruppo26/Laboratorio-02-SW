@@ -116,9 +116,10 @@ class Catalog(object):
         raise cherrypy.HTTPError(404, "Bad Request!")
     elif uri[0]=="devices" and flag:
       if uri[1]=="new":
-        return self.deviceManager.addDevice(time.time(), params['end_points']['rest'],params['resources'],params['end_points']['mqtt'])
-      elif isIDvalid(uri[1]) and int(uri[1]) < self.serviceManager.getNumberOfServices():
-        return self.deviceManager.updateDevice(int(uri[1]), time.time())
+        res = self.deviceManager.addDevice(time.time(),params['resources'],rest=params['rest'],mqtt=params['mqtt'])
+        return f"{res}"
+      elif isIDvalid(uri[1]) and int(uri[1]) < self.deviceManager.getNumberOfDevices():
+        self.deviceManager.updateDevice(int(uri[1]), time.time())
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
         

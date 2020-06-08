@@ -15,12 +15,13 @@ if __name__ == "__main__":
   while True:
     print("Client is running")
     if (deviceID==-1):
-      r = requests.post('http://localhost:8080/devices/new')
+      payload = {'resources': ['temp'],'rest':'','mqtt':''}
+      r = requests.post('http://localhost:8080/devices/new', data=payload)
       deviceID = int(r.text)
       print(f"deviceID: {deviceID}")
     else:
       r = requests.post(f"http://localhost:8080/devices/{deviceID}")
       print("Device updated!")
-    time.sleep(60)
+    time.sleep(20)
 
     

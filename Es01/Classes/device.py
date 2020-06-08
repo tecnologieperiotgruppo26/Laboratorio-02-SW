@@ -3,10 +3,8 @@
 # Formato json:
 # {
 #   deviceID: "",
-#   end_points: {
-#     rest: "",
-#     mqtt: "",
-#   },
+#   rest: "",
+#   mqtt: ""
 #   resources: [],
 #   timestamp: ""
 # }
@@ -24,7 +22,8 @@ class Device(object):
 
   def __init__(self, deviceID, timestamp, resources, rest="", mqtt=""):
     self.deviceID = deviceID
-    self.end_points = {"rest": rest, "mqtt": mqtt}
+    self.rest = rest
+    self.mqtt = mqtt
     self.resources = resources
     self.timestamp = timestamp
 
@@ -42,14 +41,13 @@ class Device(object):
   per essere serializzata meglio dal json    
   """
   def toDict(self):
-    dict = {"deviceID" : "{}".format(self.deviceID),
-            "end_points": {"rest" : "{}".format(self.end_points["rest"]),
-                           "mqtt" : "{}".format(self.end_points["mqtt"])
-                          },
+    rest = {"deviceID" : "{}".format(self.deviceID),
+            "rest" : "{}".format(self.rest),
+            "mqtt" : "{}".format(self.mqtt),
             "resources" : "{}".format(self.resources),
             "timestamp" : "{}".format(self.timestamp)
             }
-    return dict
+    return rest
 
   def toString(self):
     return "{}".format(self.toDict())
@@ -71,7 +69,7 @@ class DeviceManager(object):
       with open('Database/devices.json') as f:
         tmp = dict(json.loads(f.read()))['devices']
         for obj in tmp:
-          self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['resources'],obj['end_points']['rest'],obj['end_points']['mqtt']))
+          self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['resources'],obj['rest'],obj['mqtt']))
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
           self.n = int(self.devices[-1].getDeviceID()) + 1
@@ -96,7 +94,7 @@ class DeviceManager(object):
   # Add device
   def addDevice(self, timestamp, resources, rest="", mqtt=""):
     deviceID = self.n
-    device = Device(deviceID, timestamp, rest, resources, mqtt=mqtt)
+    device = Device(deviceID, timestamp, resources, rest=rest, mqtt=mqtt)
     self.devices.append(device)
     self.n += 1
 
