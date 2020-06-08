@@ -97,6 +97,8 @@ class UserManager(object):
     res = {"Users": listOfUsersAsDicts}
     return res
 
+  def getNumberOfUsers(self):
+    return self.n
   # Remove Users based on timestamp
   # def removeUsers(self, timestamp):
 

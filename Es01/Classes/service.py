@@ -33,6 +33,9 @@ class Service(object):
 
   def getTimestamp(self):
     return self.timestamp
+
+  def updateAtrr(self,timestamp):
+    self.timestamp = timestamp
   
   def toDict(self):
     res = {"serviceID" : "{}".format(self.serviceID),
@@ -63,18 +66,18 @@ class ServiceManager(object):
       with open('Database/services.json') as f:
         tmp = dict(json.loads(f.read()))['services']
         for obj in tmp:
-          self.services.append(Device(obj['serviceID'],obj['timestamp'],obj['description'],obj['end_points']['rest'],obj['end_points']['mqtt']))
+          self.services.append(Service(obj['serviceID'],obj['timestamp'],obj['description'],obj['end_points']['rest'],obj['end_points']['mqtt']))
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.services):
           self.n = int(self.services[-1].getServiceID()) + 1
-  else:
+    else:
       with open('Database/services.json', "w") as f:
         f.write('{"services":[]}')
         
-  # Thread 
-  self.lock = threading.Lock()
-  self.thread = threading.Thread(target=self.removeServices)
-  self.thread.start()
+    # Thread
+    self.lock = threading.Lock()
+    self.thread = threading.Thread(target=self.removeServices)
+    self.thread.start()
   
   # Stop Execution
   def __del__(self):
@@ -86,7 +89,7 @@ class ServiceManager(object):
     self.lock.release()
     
   # Add service
-  def addDevice(self, timestamp, description, rest="", mqtt=""):
+  def addService(self, timestamp, description, rest="", mqtt=""):
     serviceID = self.n
     service = Service(serviceID, timestamp, description, rest=rest, mqtt=mqtt)
     self.services.append(service)
@@ -104,15 +107,15 @@ class ServiceManager(object):
   # Get single service
   def getSingleService(self, serviceID):
     for service in self.services:
-      if int(sevice.getServiceID()) == serviceID:
+      if int(service.getServiceID()) == serviceID:
         return json.dumps(service.toDict())      
     return "{}"
 
   # Get all services
   def getServices(self):
-    return json.dumps(self.getServicesForJson())
+    return json.dumps(self.getServicesForJSon())
 
-  def getServicesForJson(self):
+  def getServicesForJSon(self):
     listOfServicesAsDicts = []
     for service in self.services:
       listOfServicesAsDicts.append(service.toDict())
@@ -139,7 +142,7 @@ class ServiceManager(object):
   # Update an existing service
   def updateDevice(self, serviceID, timestamp):
     for service in self.services:
-      if service.getDeviceID() == serviceID:
+      if service.getServiceID() == serviceID:
         service.updateAtrr(timestamp)
     else:
       return 404
