@@ -91,7 +91,7 @@ class DeviceManager(object):
     self.lock.release()
 
   # Add device
-  def addDevice(self, timestamp, rest, resources, mqtt=""):
+  def addDevice(self, timestamp, resources, rest="", mqtt=""):
     deviceID = self.n
     device = Device(deviceID, timestamp, rest, resources, mqtt=mqtt)
     self.devices.append(device)
@@ -99,7 +99,6 @@ class DeviceManager(object):
 
     # Store object in devices.json
     self.lock.acquire()
-    print("Sono nella addDevices")
     with open('Database/devices.json', "w") as file:
       json.dump(self.getDevicesForJSon(), file)#      json.dump(self.devices, file)
     self.lock.release()
@@ -113,14 +112,14 @@ class DeviceManager(object):
 
   # Get all devices
   def getDevices(self):
-    return json.dumps(self.getDevicesForJSon())     #return json.dumps(self.devices), implemento json
+    return json.dumps(self.getDevicesForJson())     #return json.dumps(self.devices), implemento json
 
   """
   getDeviceForJSon ritorna un dizionario con la lista di tutti i devices impostati come dict
   per essere trasformati in json
   quindi un dizionario che comprende una lista di dizionari. json controllato con jsonlint
   """
-  def getDevicesForJSon(self):
+  def getDevicesForJson(self):
     listOfDevicesAsDicts = []
     for device in self.devices:
       listOfDevicesAsDicts.append(device.toDict())
