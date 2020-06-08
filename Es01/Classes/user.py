@@ -16,7 +16,7 @@ import json
 # User object
 ##
 class User():
-    
+
   def __init__(self, userID, name, surname, email):
     self.userID = userID
     self.name = name
@@ -45,6 +45,7 @@ class User():
 
   def toString(self):
     return "{}".format(self.toDict())
+
 ##
 # UserManager object
 ##

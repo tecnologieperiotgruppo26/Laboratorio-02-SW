@@ -1,5 +1,13 @@
 # Documentazione ENDPOINT
 
+# Message Broker
+#
+# GET
+# - /messagebroker          Retrieve all the registered devices
+# POST
+# - /messagebroker/new      Add a new message broker
+# 
+#
 # Devices
 #
 # GET
@@ -12,15 +20,16 @@
 # Users
 #
 # GET
-# - /users                Retrieve all the registered devices
-# - /users/:userID      Retrieve a specific device with a deviceID
+# - /users                Retrieve all the registered users
+# - /users/:userID        Retrieve a specific user with a userID
 # POST
-# - /users/new            Add a new device
+# - /users/new            Add a new user
 
 
 import cherrypy
 import os
 import datetime
+from Classes.messagebroker import *
 from Classes.device import *
 from Classes.user import *
 
@@ -41,6 +50,7 @@ class Catalog(object):
   exposed = True
 
   def __init__(self):
+    self.messageBroker = MessageBrokerManager()
     self.deviceManager = DeviceManager()
     self.userManager = UserManager()
 
@@ -50,7 +60,9 @@ class Catalog(object):
     flag = isUriMultiple(uri)
     #errore qui sotto : IndexError: tuple index out of range, se faccio l'accesso a localhost ritora un 500
     if uri:
-      if uri[0]=="devices" and flag:
+      if uri[0]=="messagebroker":
+        return self.messageBroker.getMessageBroker()
+      elif uri[0]=="devices" and flag:
         if isIDvalid(uri[1]): # deviceID
           if int(uri[1]) < self.deviceManager.getNumberOfDevices():
             return self.deviceManager.getSingleDevice(int(uri[1]))
@@ -78,7 +90,12 @@ class Catalog(object):
     # Il metodo POST accetta solo l'aggiunta di risorse al Catalog, per le informazioni si utilizza GET
     # Questo flag mi indica se uri ha lunghezza maggiore di 1
     flag = isUriMultiple(uri)
-    if uri[0]=="devices" and flag:
+    if uri[0]=="messagebroker" and flag:
+      if uri[1]=="new":
+        self.messageBroker.addMessageBroker(params['ip'],params['port'])
+      else:
+        raise cherrypy.HTTPError(404, "Bad Request!")
+    elif uri[0]=="devices" and flag:
       if uri[1]=="new":
         self.deviceManager.addDevice(time.time(), params['end_points']['rest'],params['resources'],params['end_points']['mqtt'])
       else:
