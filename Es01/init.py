@@ -76,7 +76,7 @@ class Catalog(object):
         if uri[1]: # userID
           return self.userManager.getSingleUser(uri[1])
         else:
-          return self.userManager.getUsers()
+          return self.userManager.getUsers
     #else generico per "homepage"
     else:
       menu = "GET httpREST<br/>" \
