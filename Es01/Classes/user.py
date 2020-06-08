@@ -15,7 +15,7 @@ import json
 ##
 # User object
 ##
-class User():
+class User(object):
 
   def __init__(self, userID, name, surname, email):
     self.userID = userID
@@ -40,7 +40,7 @@ class User():
             "name": "{}".format(self.name),
             "surname": "{}".format(self.surname),
             "email": "{}".format(self.email)
-            }
+           }
     return res
 
   def toString(self):
@@ -93,4 +93,4 @@ class UserManager(object):
 
   # Remove Users based on timestamp
   # def removeUsers(self, timestamp):
-        
+
