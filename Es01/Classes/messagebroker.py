@@ -40,3 +40,6 @@ class MessageBrokerManager(object):
       # Store object in mb.json
       with open('Database/mb.json', "w") as file:
         json.dump(self.messageBroker, file)
+
+  def getMessageBroker(self):
+    return json.dumps(self.messageBroker)
