@@ -123,8 +123,8 @@ class DeviceManager(object):
     listOfDevicesAsDicts = []
     for device in self.devices:
       listOfDevicesAsDicts.append(device.toDict())
-    dict = {"devices" : listOfDevicesAsDicts}
-    return dict
+    res = {"devices" : listOfDevicesAsDicts}
+    return res
 
   # Remove devices based on timestamp
   def removeDevices(self):
