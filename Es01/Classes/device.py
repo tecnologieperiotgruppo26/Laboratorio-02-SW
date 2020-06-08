@@ -85,12 +85,12 @@ class DeviceManager(object):
     self.thread.start()
 
   # Stop Execution
-  def __del__(self):     #questa era la __DEL__, perchè è stato fatto un override?
+  def __del__(self):
     self.thread.join(1)
     self.lock.acquire()
     print(f"{self.getDevicesForJson()}")
     with open('Database/devices.json', "w") as file:
-      json.dump(self.getDevicesForJson(), file)   #c'era la self.devices
+      json.dump(self.getDevicesForJson(), file) 
     self.lock.release()
 
   # Add device
