@@ -63,6 +63,9 @@ class UserManager(object):
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.users):
           self.n = int(self.users[-1].getUserID()) + 1
+    else:
+      with open('Database/users.json', "w") as f:
+        f.write('{"users":[]}')
 
   # Add user
   def addUser(self, userID, name, surname, email):
@@ -74,6 +77,9 @@ class UserManager(object):
     # Store object in users.json
     with open('Database/users.json', "w") as file:
       file.write(json.dumps(self.getUsersForJSon()))
+    
+    # Ritorno l'id per comunicarlo allo user che si è registrato
+    return userID
 
   # Get single user
   def getSingleUser(self, userID):

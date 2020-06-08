@@ -75,6 +75,9 @@ class DeviceManager(object):
         # Mantiene consistenza nella numerazione degli elementi
         if len(self.devices):
           self.n = int(self.devices[-1].getDeviceID()) + 1
+    else:
+      with open('Database/devices.json', "w") as f:
+        f.write('{"devices":[]}')
 
     # Thread
     self.lock = threading.Lock()
@@ -82,12 +85,12 @@ class DeviceManager(object):
     self.thread.start()
 
   # Stop Execution
-  def __del__(self):     #questa era la __DEL__, perchè è stato fatto un override?
+  def __del__(self):
     self.thread.join(1)
     self.lock.acquire()
     print(f"{self.getDevicesForJson()}")
     with open('Database/devices.json', "w") as file:
-      json.dump(self.getDevicesForJson(), file)   #c'era la self.devices
+      json.dump(self.getDevicesForJson(), file) 
     self.lock.release()
 
   # Add device
@@ -102,6 +105,9 @@ class DeviceManager(object):
     with open('Database/devices.json', "w") as file:
       json.dump(self.getDevicesForJson(), file)#      json.dump(self.devices, file)
     self.lock.release()
+    
+    # Ritorno l'id per comunicarlo al dispositivo che si è registrato
+    return deviceID
 
   # Get single device
   def getSingleDevice(self, deviceID):
