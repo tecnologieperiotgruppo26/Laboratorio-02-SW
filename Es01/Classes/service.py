@@ -130,7 +130,7 @@ class ServiceManager(object):
       self.lock.release()
       time.sleep(self.TIMEOUT)
   
-  # Update an existin service
+  # Update an existing service
   def updateDevice(self, serviceID, timestamp):
     for service in self.services:
       if service.getDeviceID() == serviceID:
