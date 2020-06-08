@@ -36,12 +36,12 @@ class User():
     return self.email
 
   def toDict(self):
-    dict = {"userID": "{}".format(self.userID),
+    res = {"userID": "{}".format(self.userID),
             "name": "{}".format(self.name),
             "surname": "{}".format(self.surname),
             "email": "{}".format(self.email)
             }
-    return dict
+    return res
 
   def toString(self):
     return "{}".format(self.toDict())
@@ -77,8 +77,8 @@ class UserManager(object):
 
   # Get single user
   def getSingleUser(self, userID):
-    dict = self.users[userID].toDict()
-    return json.dumps(dict)
+    res = self.users[userID].toDict()
+    return json.dumps(res)
 
   # Get all users
   def getUsers(self):
@@ -88,8 +88,8 @@ class UserManager(object):
     listOfUsersAsDicts = []
     for Users in self.users:
       listOfUsersAsDicts.append(Users.toDict())
-    dict = {"Users": listOfUsersAsDicts}
-    return dict
+    res = {"Users": listOfUsersAsDicts}
+    return res
 
   # Remove Users based on timestamp
   # def removeUsers(self, timestamp):
