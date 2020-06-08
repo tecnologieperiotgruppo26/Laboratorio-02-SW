@@ -77,6 +77,9 @@ class UserManager(object):
     # Store object in users.json
     with open('Database/users.json', "w") as file:
       file.write(json.dumps(self.getUsersForJSon()))
+    
+    # Ritorno l'id per comunicarlo allo user che si è registrato
+    return userID
 
   # Get single user
   def getSingleUser(self, userID):

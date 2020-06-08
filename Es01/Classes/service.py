@@ -97,6 +97,9 @@ class ServiceManager(object):
     with open('Database/services.json', "w") as file:
       json.dump(self.getServicesForJSon(), file)
     self.lock.release()
+    
+    # Ritorno l'id per comunicarlo al servizio che si è registrato
+    return serviceID
 
   # Get single service
   def getSingleService(self, serviceID):

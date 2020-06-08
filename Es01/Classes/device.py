@@ -105,6 +105,9 @@ class DeviceManager(object):
     with open('Database/devices.json', "w") as file:
       json.dump(self.getDevicesForJson(), file)#      json.dump(self.devices, file)
     self.lock.release()
+    
+    # Ritorno l'id per comunicarlo al dispositivo che si è registrato
+    return deviceID
 
   # Get single device
   def getSingleDevice(self, deviceID):
