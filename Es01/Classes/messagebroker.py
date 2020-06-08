@@ -19,9 +19,24 @@ class MessageBroker(object):
     self.ip = ip
     self.port = port
 
-    # Store object in mb.json
-    with open('Database/mb.json', "w") as file:
-      file.write(json.dumps(self))
-
   def getMessageBroker(self):
     return json.dumps(self)
+
+##
+# MessageBroker object
+##
+class MessageBrokerManager(object):
+
+  def __init__(self):
+    self.messageBroker = {}
+    if os.path.exists('Database/mb.json'):
+      with open('Database/mb.json') as file:
+        self.messageBroker = dict(json.loads(file.read()))
+
+  # Add message broker
+  def addMessageBroker(self, ip, port):
+    if self.messageBroker!=False:
+      self.messageBroker = MessageBroker(ip, port)
+      # Store object in mb.json
+      with open('Database/mb.json', "w") as file:
+        json.dump(self.messageBroker, file)

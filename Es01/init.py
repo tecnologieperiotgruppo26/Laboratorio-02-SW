@@ -1,5 +1,13 @@
 # Documentazione ENDPOINT
 
+# Message Broker
+#
+# GET
+# - /messagebroker          Retrieve all the registered devices
+# POST
+# - /messagebroker/new      Add a new message broker
+# 
+#
 # Devices
 #
 # GET
@@ -12,10 +20,10 @@
 # Users
 #
 # GET
-# - /users                Retrieve all the registered devices
-# - /users/:userID      Retrieve a specific device with a deviceID
+# - /users                Retrieve all the registered users
+# - /users/:userID        Retrieve a specific user with a userID
 # POST
-# - /users/new            Add a new device
+# - /users/new            Add a new user
 
 
 import cherrypy
@@ -41,6 +49,7 @@ class Catalog(object):
   exposed = True
 
   def __init__(self):
+    self.messageBroker =
     self.deviceManager = DeviceManager()
     self.userManager = UserManager()
 
@@ -50,7 +59,9 @@ class Catalog(object):
     flag = isUriMultiple(uri)
     #errore qui sotto : IndexError: tuple index out of range, se faccio l'accesso a localhost ritora un 500
     if uri:
-      if uri[0]=="devices" and flag:
+      if uri[0]=="messagebroker":
+
+      elif uri[0]=="devices" and flag:
         if isIDvalid(uri[1]): # deviceID
           if int(uri[1]) < self.deviceManager.getNumberOfDevices():
             return self.deviceManager.getSingleDevice(int(uri[1]))
