@@ -32,6 +32,7 @@ import datetime
 from Classes.messagebroker import *
 from Classes.device import *
 from Classes.user import *
+from Classes.service import *
 
 
 def isIDvalid(string):
@@ -53,6 +54,7 @@ class Catalog(object):
     self.messageBroker = MessageBrokerManager()
     self.deviceManager = DeviceManager()
     self.userManager = UserManager()
+    self.serviceManager = ServiceManager()
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
@@ -72,11 +74,28 @@ class Catalog(object):
           raise cherrypy.HTTPError(404, "Bad Request!")
       elif uri[0]=="devices":
         return self.deviceManager.getDevices()
-      elif uri[0]=="users":
-        if uri[1]: # userID
-          return self.userManager.getSingleUser(uri[1])
+      #GET USERS
+      elif uri[0]=="users" and flag:
+        if isIDvalid(uri[1]): # deviceID
+          if int(uri[1]) < self.userManager.getNumberOfUsers():
+            return self.userManager.getSingleUser(int(uri[1]))
+          else:
+            raise cherrypy.HTTPError(404, "Bad Request!")
         else:
-          return self.userManager.getUsers
+          raise cherrypy.HTTPError(404, "Bad Request!")
+      elif uri[0]=="users":
+        return self.userManager.getUsers()
+      #GET SERVICES
+      elif uri[0]=="services" and flag:
+        if isIDvalid(uri[1]): # deviceID
+          if int(uri[1]) < self.serviceManager.getNumberOfServices():
+            return self.serviceManager.getSingleService(uri[1])
+          else:
+            raise cherrypy.HTTPError(404, "Bad Request!")
+        else:
+          raise cherrypy.HTTPError(404, "Bad Request!")
+      elif uri[0]=="services":
+        return self.serviceManager.getServices()
     #else generico per "homepage"
     else:
       menu = "GET httpREST<br/>" \
