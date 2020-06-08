@@ -35,14 +35,14 @@ class Service(object):
     return self.timestamp
   
   def toDict(self):
-    dict = {"serviceID" : "{}".format(self.serviceID),
+    res = {"serviceID" : "{}".format(self.serviceID),
             "end_points": {"rest" : "{}".format(self.end_points["rest"]),
                            "mqtt" : "{}".format(self.end_points["mqtt"])
                           },
             "description" : "{}".format(self.description),
             "timestamp" : "{}".format(self.timestamp)
             }
-    return dict
+    return res
 
   def toString(self):
     return "{}".format(self.toDict())
