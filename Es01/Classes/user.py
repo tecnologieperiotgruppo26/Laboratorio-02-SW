@@ -17,12 +17,34 @@ import json
 ##
 class User():
     
-    def __init__(self, userID, name, surname, email):
-        self.userID = userID
-        self.name = name
-        self.surname = surname
-        self.email = email
+  def __init__(self, userID, name, surname, email):
+    self.userID = userID
+    self.name = name
+    self.surname = surname
+    self.email = email
 
+  def getUserID(self):
+    return self.userID
+
+  def getName(self):
+    return self.name
+
+  def getSurname(self):
+    return self.surname
+
+  def getEmail(self):
+    return self.email
+
+  def toDict(self):
+    dict = {"userID": "{}".format(self.userID),
+            "name": "{}".format(self.name),
+            "surname": "{}".format(self.surname),
+            "email": "{}".format(self.email)
+            }
+    return dict
+
+  def toString(self):
+    return "{}".format(self.toDict())
 ##
 # UserManager object
 ##
@@ -31,10 +53,15 @@ class UserManager(object):
   def __init__(self):
     self.users = []
     self.n = 0
-    if os.path.exists('./Database/users.json'):
-      with open('./Database/users.json') as file:
-        self.users = json.load(file)
-        self.n = len(self.users)
+
+    if os.path.exists('Database/users.json'):
+      with open('Database/devices.json') as f:
+        tmp = dict(json.loads(f.read()))['users']
+        for obj in tmp:
+          self.users.append(User(obj['userID'],obj['name'],obj['surname'],obj['email']))
+        # Mantiene consistenza nella numerazione degli elementi
+        if len(self.users):
+          self.n = int(self.users[-1].getUserID()) + 1
 
   # Add user
   def addUser(self, userID, name, surname, email):
@@ -44,17 +71,25 @@ class UserManager(object):
     self.n += 1
 
     # Store object in users.json
-    with open('../Database/users.json', "w") as file:
-      file.write(json.dumps(self.users))
+    with open('Database/users.json', "w") as file:
+      file.write(json.dumps(self.getUsersForJSon()))
 
   # Get single user
   def getSingleUser(self, userID):
-    return json.dumps(self.users[userID])
+    dict = self.users[userID].toDict()
+    return json.dumps(dict)
 
   # Get all users
   def getUsers(self):
-    return json.dumps(self.users)
+    return json.dumps(self.getUsersForJSon())
 
-  # Remove devices based on timestamp
-  # def removeDevices(self, timestamp):
+  def getUsersForJSon(self):
+    listOfUsersAsDicts = []
+    for Users in self.users:
+      listOfUsersAsDicts.append(Users.toDict())
+    dict = {"Users": listOfUsersAsDicts}
+    return dict
+
+  # Remove Users based on timestamp
+  # def removeUsers(self, timestamp):
         
