@@ -7,14 +7,13 @@
  *          di temperatura.
  */
 
-
 #include <Bridge.h>
 #include <BridgeServer.h>
 #include <BridgeClient.h>
 #include <ArduinoJson.h>
 #include <Process.h>
 
-const int capacity = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(4) + 40;
+const int capacity = JSON_OBJECT_SIZE(3) + 40;
 DynamicJsonDocument doc_snd(capacity);
 
 BridgeServer server; 
@@ -96,24 +95,15 @@ String senMlEncode(String res, float v, String unit){
    *              (si potrebbe semplificare per un caso reale
    *              ma preferisco mantenere leggibilità)
    *          unit = unità di misura del valore della risorsa
-   *        {"deviceID" : "{}".format(self.deviceID),                         data dal server
-            "end_points": {"rest" : "{}".format(self.end_points["rest"]),     è una richiesta rest, forse devo mandare il mio ip?
-                           "mqtt" : "{}".format(self.end_points["mqtt"])
-                          },
-            "resources" : "{}".format(self.resources),                        questa è una risorsa, ma come metto? in dict? provo con {"temperatura": "valore"}
-            "timestamp" : "{}".format(self.timestamp)
-            }
    */
   doc_snd.clear();
-  doc_snd["bn"] = "Yun";
-  doc_snd["e"][0]["n"] = res;
+  doc_snd["res"] = res;
+  doc_snd["value"] = v;
   if (unit != ""){
-    doc_snd["e"][0]["u"] = unit;
+    doc_snd["u"] = unit;
   } else {
-    doc_snd["e"][0]["u"] = (char*)NULL;
+    doc_snd["u"] = (char*)NULL;
   }
-  doc_snd["e"][0]["t"] = millis()/1000;
-  doc_snd["e"][0]["v"] = int(v);
   
   String output;
   serializeJson(doc_snd, output);
@@ -133,7 +123,7 @@ int postRequest(String data){
   p.addParameter("-X");
   p.addParameter("POST");
   p.addParameter("-d");
-  p.addParameter(data);
+  p.addParameter("param1=" + data);
   p.addParameter(url);
   p.run();
 
