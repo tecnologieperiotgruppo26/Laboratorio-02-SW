@@ -93,6 +93,7 @@ class DeviceManager(object):
 
   # Add device
   def addDevice(self, timestamp, resources, rest="", mqtt=""):
+    print("Sto per aggiungere un nuovo device")
     deviceID = self.n
     device = Device(deviceID, timestamp, resources, rest=rest, mqtt=mqtt)
     self.devices.append(device)
@@ -146,13 +147,17 @@ class DeviceManager(object):
         with open('Database/devices.json', "w") as file:
           json.dump(self.getDevicesForJson(), file)#      json.dump(self.devices, file)
       self.lock.release()
-      time.sleep(self.TIMEOUT)#perchè dorme per timeout?
+      time.sleep(self.TIMEOUT)
 
   # Update an existin device
   def updateDevice(self, deviceID, timestamp): # per altre info basta aggiungere altri argomenti al metodo
     for device in self.devices:
       if device.getDeviceID() == deviceID:
         device.updateAtrr(time.time())
+        self.lock.acquire()
+        with open('Database/devices.json', "w") as file:
+          json.dump(self.getDevicesForJson(), file)  # json.dump(self.devices, file)
+        self.lock.release()
     else:
       # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa
       # lasciare al caso l'avvenuta conferma

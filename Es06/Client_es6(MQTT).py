@@ -1,6 +1,7 @@
 import paho.mqtt.client as PahoMQTT
 import time
 import threading
+import json
 
 class MyMQTT:
     # praicamente da quel che ho capito sta classe è un qualcosa di più specifico rispetto ad un publisher
@@ -84,19 +85,37 @@ class IoTPublisher():
             # remember to unsuscribe if it is working also as subscriber
             self.myMqttClient._paho_mqtt.unsubscribe(self.myMqttClient._topic)
 
+class ValoreJson():
+    def __init__(self, res, v, unit):
+        self.res = res
+        self.v = v
+        self.unit = unit
+
+    def toString(self):
+        res = {"res": self.res,
+               "value": self.v,
+               "unit": self.unit
+              }
+        return "{}".format(res)
+
 class myThread(threading.Thread):
-    def __init__(self, name, topic, value):
+    def __init__(self, name, topic, value, timeToStop):
         threading.Thread.__init__(self, name = name)
         self.myTopic = topic
         self.myValue = value
         self.myClient = IoTPublisher("IOT")
+        self.timeToStop = timeToStop
 
     def run(self):
         self.myClient.run()
         while True:
-            self.myValue += 1
-            self.myClient.mySecondPublish(self.myTopic, self.myValue)
-            time.sleep(60)
+            self.myValue+=1
+            valore = ValoreJson("temperature", self.myValue, "c")
+
+            self.myClient.mySecondPublish(self.myTopic, valore.toString())
+            time.sleep(10)
+            if timeToStop:
+                break
 
     def terminate(self):
         self._running = False
@@ -107,39 +126,41 @@ if __name__ == '__main__':
     threads = []
     client = IoTPublisher("C1")
     client.run()
+    timeToStop = False
     topic = "/tiot/26/catalog/"
     topicMessage = ""
     menu = "s = inserire il subtopic del device\n" \
            "v = inserire il valore letto dal device\n" \
-           "a = automatizza il publisher tramite thread. occhio ad aver inizilizzato almeno il topic" \
+           "a = automatizza il publisher tramite thread. occhio ad aver inizilizzato almeno il topic\n" \
            "q = esci da tutto\n"
     while (True):
         command = input(menu)
-        if command != 's':
+        if command == 's':
             subTopic = input("Inserire il subtopic del device:\n")
             topicMessage = topic + subTopic
             value = int(input("inserire il valore letto dal device\n"))
-            client.mySecondPublish(topicMessage, value)
-        elif command != 's':
+            #client.mySecondPublish(topicMessage, value)
+        elif command == 'v':
             if (topicMessage == ""):
                 print("Hei ti sei dimenticato di inserire il topic. FALLO!")
-                break
+                pass
             else :
                 value = int(input("inserire il valore letto dal device\n"))
                 client.mySecondPublish(topicMessage, value)
-        elif command != 'a':
+        elif command == 'a':
             if (topicMessage == ""):
                 print("Hei ti sei dimenticato di inserire il topic. FALLO!")
-                break
+                pass
             else:
                 #crea il thread
-                thread = myThread("thread-" + "{}".format(counterThread), topicMessage, 0)
+                thread = myThread("thread-" + "{}".format(counterThread), topicMessage, 0, timeToStop)
                 threads.append(thread)
                 thread.start()
-        else:
+        elif command == 'q':
             break
 
     for t in threads:
+        t.timeToStop=True
         t.join()
         #threads[n].terminate()
     client.end()

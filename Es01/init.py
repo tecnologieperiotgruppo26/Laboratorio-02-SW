@@ -33,6 +33,7 @@ from Classes.messagebroker import *
 from Classes.device import *
 from Classes.user import *
 from Classes.service import *
+from Classes.MQTT import *
 
 
 def isIDvalid(string):
@@ -55,6 +56,11 @@ class Catalog(object):
     self.deviceManager = DeviceManager()
     self.userManager = UserManager()
     self.serviceManager = ServiceManager()
+    self.MQTTManager = ClientMQTT("Server", self.deviceManager)
+    baseTopic = "/tiot/26/catalog/"
+    self.MQTTManager.run()
+    self.MQTTManager.mySubscribe(baseTopic + "#")
+
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
@@ -109,6 +115,7 @@ class Catalog(object):
     # Il metodo POST accetta solo l'aggiunta di risorse al Catalog, per le informazioni si utilizza GET
     # Questo flag mi indica se uri ha lunghezza maggiore di 1
     flag = isUriMultiple(uri)
+    listaNotifyMQTT = []
     if uri[0]=="messagebroker" and flag:
       if uri[1]=="new":
         self.messageBroker.addMessageBroker(params['ip'],params['port'])
@@ -122,7 +129,12 @@ class Catalog(object):
         self.deviceManager.updateDevice(int(uri[1]), time.time())
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
-        
+    # listaNotifyMQTT = self.MQTTManager.notify()
+    # if listaNotifyMQTT:
+    #   mqtt = str(listaNotifyMQTT[0]).split('/')[-1]
+    #   self.deviceManager.addDevice(time.time(), params[json.dumps(listaNotifyMQTT[1])], rest=params[''], mqtt=params[mqtt])
+    #   listaNotifyMQTT.pop(1)
+    #   listaNotifyMQTT.pop(0)
 
 if __name__ == '__main__': 
   conf = {
@@ -136,6 +148,7 @@ if __name__ == '__main__':
   cherrypy.engine.start()
   #cherrypy.engine.block()
   input()
+  Catalog().MQTTManager.end()
   Catalog().deviceManager.__del__()
   cherrypy.engine.stop()
   #Catalog().deviceManager.__del__()
