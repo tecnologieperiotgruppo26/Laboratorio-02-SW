@@ -77,7 +77,7 @@ class ClientMQTT():
         # manage here your received message. You can perform some error-check here
         mqtt = str(topic[0]).split('/')[-1]
         print(mqtt)
-        obj = json.loads(msg)
+        obj = dict(json.loads(msg))
         deviceID = obj['deviceID']
         resources = [obj['resource']]
         #if msg["deviceID"] == "unregistered":
