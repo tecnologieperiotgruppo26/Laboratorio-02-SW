@@ -118,7 +118,7 @@ class Catalog(object):
     listaNotifyMQTT = []
     if uri[0]=="messagebroker" and flag:
       if uri[1]=="new":
-        self.messageBroker.addMessageBroker(params['ip'],params['port'])
+        self.messageBroker.addMessageBroker(params['url'],params['port'])
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     elif uri[0]=="devices" and flag:

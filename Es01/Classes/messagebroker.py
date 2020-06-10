@@ -15,8 +15,8 @@ import json
 ##
 class MessageBroker(object):
 
-  def __init__(self, ip, port):
-    self.ip = ip
+  def __init__(self, url, port):
+    self.url = url
     self.port = port
 
   def getMessageBroker(self):
@@ -34,9 +34,9 @@ class MessageBrokerManager(object):
         self.messageBroker = dict(json.loads(file.read()))
 
   # Add message broker
-  def addMessageBroker(self, ip, port):
+  def addMessageBroker(self, url, port):
     if self.messageBroker!=False:
-      self.messageBroker = MessageBroker(ip, port)
+      self.messageBroker = MessageBroker(url, port)
       # Store object in mb.json
       with open('Database/mb.json', "w") as file:
         json.dump(self.messageBroker, file)
