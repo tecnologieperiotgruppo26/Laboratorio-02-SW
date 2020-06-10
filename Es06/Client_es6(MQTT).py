@@ -86,17 +86,20 @@ class IoTPublisher():
             self.myMqttClient._paho_mqtt.unsubscribe(self.myMqttClient._topic)
 
 class ValoreJson():
-    def __init__(self, res, v, unit):
+    def __init__(self, res, v, unit, deviceID = "unregistered"):
         self.res = res
         self.v = v
         self.unit = unit
+        self.deviceId = deviceID
 
     def toString(self):
-        res = {"res": self.res,
-               "value": self.v,
-               "unit": self.unit
-              }
-        return "{}".format(res)
+        res = {"deviceID": "unregistered",
+               "resource": {"res": self.res,
+                            "value": self.v,
+                            "unit": self.unit
+                            }
+                }
+        return json.dumps(res)
 
 class myThread(threading.Thread):
     def __init__(self, name, topic, value, timeToStop):
@@ -105,14 +108,16 @@ class myThread(threading.Thread):
         self.myValue = value
         self.myClient = IoTPublisher("IOT")
         self.timeToStop = timeToStop
+        self.deviceID = "unregistered"
 
     def run(self):
         self.myClient.run()
+        self.myClient.mySubscribe(self.myTopic+"/+")
         while True:
-            self.myValue+=1
-            valore = ValoreJson("temperature", self.myValue, "c")
-
+            self.myValue += 1
+            valore = ValoreJson("temperature", self.myValue, "c", self.deviceID)
             self.myClient.mySecondPublish(self.myTopic, valore.toString())
+            print("sto inviando {}".format(valore.toString()))
             time.sleep(10)
             if timeToStop:
                 break
@@ -124,7 +129,7 @@ class myThread(threading.Thread):
 if __name__ == '__main__':
     counterThread = 0
     threads = []
-    client = IoTPublisher("C1")
+    client = IoTPublisher("cliente")
     client.run()
     timeToStop = False
     topic = "/tiot/26/catalog/"

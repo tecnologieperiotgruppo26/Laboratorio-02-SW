@@ -75,17 +75,14 @@ class ClientMQTT():
 
     def notify(self, topic, msg):
         # manage here your received message. You can perform some error-check here
-        print("received '%s' under topic '%s'" % (msg, topic))
-        print("sto prima di mqtt")
         mqtt = str(topic[0]).split('/')[-1]
-        print("sto prima di res")
-        #res = Resource(msg['res'], msg['v'], msg['unit'])
-        print("sto dopo res")
-        #payload = {'resources': [res.toDict()], 'rest': '', 'mqtt': mqtt}
-        try:
-            self.deviceManager.addDevice(time.time(), msg, rest=[''], mqtt=["mqtt.eclipse.org:1883"])
-        except:
-            print("Qualcosa non va")
+        print(mqtt)
+        #if msg["deviceID"] == "unregistered":
+        self.deviceManager.addDevice(time.time(), (msg), rest=[''], mqtt=[mqtt])
+        #     self.myPublish(topic + "/res", str(idNew))
+        # else:
+        #     self.deviceManager.updateDevice(int(msg["deviceID"]), time.time(), msg["resource"])
+
 
     def mySubscribe(self, topic: str):
         self.myMqttClient.mySubscribe(topic)

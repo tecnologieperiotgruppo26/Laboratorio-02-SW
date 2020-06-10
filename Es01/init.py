@@ -59,7 +59,7 @@ class Catalog(object):
     self.MQTTManager = ClientMQTT("Server", self.deviceManager)
     baseTopic = "/tiot/26/catalog/"
     self.MQTTManager.run()
-    self.MQTTManager.mySubscribe(baseTopic + "#")
+    self.MQTTManager.mySubscribe(baseTopic + "temperatura")
 
 
   def GET(self, *uri, **params):

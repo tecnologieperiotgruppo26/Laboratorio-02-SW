@@ -24,7 +24,7 @@ class Device(object):
     self.deviceID = deviceID
     self.rest = rest
     self.mqtt = mqtt
-    self.resources = resources
+    self.resources = list(resources)
     self.timestamp = timestamp
 
   def updateAtrr(self,timestamp):
@@ -35,6 +35,9 @@ class Device(object):
 
   def getTimestamp(self):
     return self.timestamp
+
+  def addResource(self, resource):
+    self.resources.append(resource)
 
   """
   la funzione toDict serve a riportare correttamente tutti i parametri della classe device
@@ -150,10 +153,11 @@ class DeviceManager(object):
       time.sleep(self.TIMEOUT)
 
   # Update an existin device
-  def updateDevice(self, deviceID, timestamp): # per altre info basta aggiungere altri argomenti al metodo
+  def updateDevice(self, deviceID, timestamp, resource): # per altre info basta aggiungere altri argomenti al metodo
     for device in self.devices:
       if device.getDeviceID() == deviceID:
         device.updateAtrr(time.time())
+        device.addResource(resource)
         self.lock.acquire()
         with open('Database/devices.json', "w") as file:
           json.dump(self.getDevicesForJson(), file)  # json.dump(self.devices, file)
