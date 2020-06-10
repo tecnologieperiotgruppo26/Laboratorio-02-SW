@@ -24,7 +24,7 @@ class Device(object):
     self.deviceID = deviceID
     self.rest = rest
     self.mqtt = mqtt
-    self.resources = list(resources)
+    self.resources = resources
     self.timestamp = timestamp
 
   def updateAtrr(self,timestamp):

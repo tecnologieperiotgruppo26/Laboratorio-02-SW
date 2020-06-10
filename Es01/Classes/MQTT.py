@@ -77,8 +77,11 @@ class ClientMQTT():
         # manage here your received message. You can perform some error-check here
         mqtt = str(topic[0]).split('/')[-1]
         print(mqtt)
+        obj = json.loads(msg)
+        deviceID = obj['deviceID']
+        resources = [obj['resource']]
         #if msg["deviceID"] == "unregistered":
-        self.deviceManager.addDevice(time.time(), (msg), rest=[''], mqtt=[mqtt])
+        self.deviceManager.addDevice(time.time(), resources, rest=[''], mqtt=[mqtt])
         #     self.myPublish(topic + "/res", str(idNew))
         # else:
         #     self.deviceManager.updateDevice(int(msg["deviceID"]), time.time(), msg["resource"])
