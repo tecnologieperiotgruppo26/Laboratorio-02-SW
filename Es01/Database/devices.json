@@ -1,1 +1,1 @@
-{"devices": []}
+{"devices": [{"deviceID": "0", "rest": "['']", "mqtt": "", "resources": "[{'n': 'temperature', 'v': 1, 'u': 'c'}]", "timestamp": "1591887366.370901"}, {"deviceID": "1", "rest": "['']", "mqtt": "", "resources": "[{'n': 'temperature', 'v': 2, 'u': 'c'}]", "timestamp": "1591887376.0667899"}, {"deviceID": "2", "rest": "['']", "mqtt": "", "resources": "[{'n': 'temperature', 'v': 3, 'u': 'c'}]", "timestamp": "1591887386.093654"}]}

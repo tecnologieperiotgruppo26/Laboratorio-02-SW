@@ -1,1 +1,1 @@
-{"services": []}
+{"services": [{"serviceID": "0", "rest": "", "mqtt": "", "description": "prova", "timestamp": "1591887065.91761"}, {"serviceID": "1", "rest": "", "mqtt": "", "description": "prova", "timestamp": "1591887087.5820212"}, {"serviceID": "2", "rest": "", "mqtt": "", "description": "prova", "timestamp": "1591887091.427722"}]}
