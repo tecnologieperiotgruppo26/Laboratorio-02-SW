@@ -4,10 +4,8 @@
 # {
 #   serviceID: "",
 #   description: "",
-#   end_points: {
-#     rest: "",
-#     mqtt: "",
-#   },
+#   rest: "",
+#   mqtt: "",
 #   timestamp: ""
 # }
 
@@ -68,7 +66,7 @@ class ServiceManager(object):
         if os.path.getsize('Database/services.json') > 0:
           tmp = dict(json.loads(f.read()))['services']
           for obj in tmp:
-            self.services.append(Service(obj['serviceID'],obj['timestamp'],obj['description'],obj['end_points']['rest'],obj['end_points']['mqtt']))
+            self.services.append(Service(obj['serviceID'],obj['timestamp'],obj['description'],obj['rest'],obj['mqtt']))
           # Mantiene consistenza nella numerazione degli elementi
           if len(self.services):
             self.n = int(self.services[-1].getServiceID()) + 1
