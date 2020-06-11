@@ -57,7 +57,7 @@ class UserManager(object):
 
     if os.path.exists('Database/users.json'):
       with open('Database/users.json') as f:
-        if os.path.getsize('Database/devices.json') > 0:
+        if os.path.getsize('Database/users.json') > 0:
           tmp = dict(json.loads(f.read()))['users']
           for obj in tmp:
             self.users.append(User(obj['userID'],obj['name'],obj['surname'],obj['email']))
@@ -65,7 +65,9 @@ class UserManager(object):
           if len(self.users):
             self.n = int(self.users[-1].getUserID()) + 1
         else:
-          f.write('{"users":[]}')
+          f.close()
+          with open('Database/users.json', "w") as f:
+            f.write('{"users":[]}')
     else:
       with open('Database/users.json', "w") as f:
         f.write('{"users":[]}')

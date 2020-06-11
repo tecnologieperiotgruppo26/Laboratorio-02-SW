@@ -71,7 +71,9 @@ class ServiceManager(object):
           if len(self.services):
             self.n = int(self.services[-1].getServiceID()) + 1
         else:
-          f.write('{"services":[]}')
+          f.close()
+          with open('Database/services.json', "w") as f:
+            f.write('{"services":[]}')
     else:
       with open('Database/services.json', "w") as f:
         f.write('{"services":[]}')

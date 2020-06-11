@@ -78,7 +78,9 @@ class DeviceManager(object):
           if len(self.devices):
             self.n = int(self.devices[-1].getDeviceID()) + 1
         else:
-          f.write('{"devices":[]}')
+          f.close()
+          with open('Database/devices.json', "w") as f:
+            f.write('{"devices":[]}')
     else:
       with open('Database/devices.json', "w") as f:
         f.write('{"devices":[]}')

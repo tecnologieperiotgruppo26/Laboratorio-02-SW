@@ -75,7 +75,8 @@ class ClientMQTT():
 
     def notify(self, topic, msg):
         # manage here your received message. You can perform some error-check here
-        end_point = str(topic[0]).split('/')[-1]
+        end_point = str(topic).split('/')[-1]
+        print(topic)
         print(end_point)
         obj = dict(json.loads(msg))
         deviceID = obj['bn']
