@@ -57,10 +57,8 @@ class Catalog(object):
     self.userManager = UserManager()
     self.serviceManager = ServiceManager()
     self.MQTTManager = ClientMQTT("Server", self.deviceManager)
-    baseTopic = "/tiot/26/catalog/"
     self.MQTTManager.run()
-    self.MQTTManager.mySubscribe(baseTopic + "#")
-
+    self.MQTTManager.mySubscribe(self.messageBroker.getMessageBrokerCatalog() + "#")
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
