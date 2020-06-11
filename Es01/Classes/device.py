@@ -47,13 +47,13 @@ class Device(object):
     rest = {"deviceID" : "{}".format(self.deviceID),
             "rest" : "{}".format(self.rest),
             "mqtt" : "{}".format(self.mqtt),
-            "resources" : "{}".format(self.resources),
+            "resources" : self.resources,
             "timestamp" : "{}".format(self.timestamp)
             }
     return rest
 
   def toString(self):
-    return json.loads(self)
+    return "{}".format(self.toDict())
 
 ##
 # DeviceManager object
@@ -71,7 +71,7 @@ class DeviceManager(object):
     if os.path.exists('Database/devices.json'):
       with open('Database/devices.json') as f:
         if os.path.getsize('Database/devices.json') > 0:
-          tmp = dict(json.loads(f.read()))['devices']
+          tmp = json.loads(f.read())['devices']
           for obj in tmp:
             self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['resources'],obj['rest'],obj['mqtt']))
           # Mantiene consistenza nella numerazione degli elementi
@@ -104,11 +104,13 @@ class DeviceManager(object):
     print("Sto per aggiungere un nuovo device")
     deviceID = self.n
     device = Device(deviceID, timestamp, resources, rest=rest, mqtt=mqtt)
+    print(type(resources))
     self.devices.append(device)
     self.n += 1
 
     # Store object in devices.json
     self.lock.acquire()
+    print(json.dumps(self.getDevicesForJson()))
     with open('Database/devices.json', "w") as file:
       json.dump(self.getDevicesForJson(), file)#      json.dump(self.devices, file)
     self.lock.release()
@@ -161,12 +163,10 @@ class DeviceManager(object):
   def updateDevice(self, deviceID, timestamp, resource = ""): # per altre info basta aggiungere altri argomenti al metodo
     print("Sono entrato nella funzione update")
     for device in self.devices:
-      print(device.toString())
-      if device.getDeviceID() == deviceID:
+      if int(device.getDeviceID()) == int(deviceID):
         print("MI TROVO NELLA UPDATEDEVICE")
-
         device.updateAtrr(time.time())
-        device.addResource(resource)
+        device.addResource(dict(resource))
         self.lock.acquire()
         with open('Database/devices.json', "w") as file:
           json.dump(self.getDevicesForJson(), file)  # json.dump(self.devices, file)

@@ -132,7 +132,7 @@ class Catalog(object):
         res = self.serviceManager.addService(time.time(), params['description'], rest=params['rest'],mqtt=params['mqtt'])
         return f"{res}"
       elif isIDvalid(uri[1]) and int(uri[1]) < self.serviceManager.getNumberOfServices():
-        self.serviceManager.updateDevice(int(uri[1]), time.time(), resource = "")
+        self.serviceManager.updateService(int(uri[1]), time.time())
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     # listaNotifyMQTT = self.MQTTManager.notify()

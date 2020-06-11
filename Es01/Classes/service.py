@@ -145,7 +145,7 @@ class ServiceManager(object):
       time.sleep(self.TIMEOUT)
   
   # Update an existing service
-  def updateDevice(self, serviceID, timestamp):
+  def updateService(self, serviceID, timestamp):
     for service in self.services:
       if service.getServiceID() == serviceID:
         service.updateAtrr(timestamp)

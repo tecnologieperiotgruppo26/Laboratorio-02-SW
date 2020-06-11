@@ -35,9 +35,9 @@ class MessageBrokerManager(object):
         self.messageBroker = dict(json.loads(file.read()))
 
   # Add message broker
-  def addMessageBroker(self, url, port):
+  def addMessageBroker(self, url, port, catalogTopic):
     if self.messageBroker!=False:
-      self.messageBroker = MessageBroker(url, port)
+      self.messageBroker = MessageBroker(url, port, catalogTopic)
       # Store object in mb.json
       with open('Database/mb.json', "w") as file:
         json.dump(self.messageBroker, file)
