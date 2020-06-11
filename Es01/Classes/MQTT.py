@@ -80,13 +80,18 @@ class ClientMQTT():
         print(end_point)
         obj = dict(json.loads(msg))
         deviceID = obj['bn']
-        resources = [obj['e']]
-        #if msg["deviceID"] == "unregistered":
-        self.deviceManager.addDevice(time.time(), resources, rest=[''], mqtt=end_point)
-        #     self.myPublish(topic + "/res", str(idNew))
-        # else:
-        #     self.deviceManager.updateDevice(int(msg["deviceID"]), time.time(), msg["resource"])
-
+        resources = obj['e']
+        print(deviceID)
+        print(resources)
+        if deviceID == "unregistered":
+            idNew = self.deviceManager.addDevice(time.time(), resources, rest=[''], mqtt=end_point)
+            self.myPublish(topic + "/res", str(idNew))
+        else:
+            print("sono nell'else")
+            try:
+                self.deviceManager.updateDevice(int(msg["bn"]), time.time(), resources)
+            except:
+                print("Uno ci prova, ma qui proprio non ci si riesce!")
 
     def mySubscribe(self, topic: str):
         self.myMqttClient.mySubscribe(topic)

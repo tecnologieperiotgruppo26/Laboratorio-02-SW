@@ -52,48 +52,53 @@ class MyMQTT:
         # indica il grado di QOS relativo a quella comunicazione
         self._paho_mqtt.publish(topic, message, 2)
 
-
-class IoTPublisher():
-    def __init__(self, clientID):
-        # create an instance of MyMQTT class
-        self.clientID = clientID
-        self.myMqttClient = MyMQTT(self.clientID, "mqtt.eclipse.org", 1883, self)
-
-    def run(self):
-        # if needed, perform some other actions befor starting the mqtt communication
-        print("running %s" % (self.clientID))
-        self.myMqttClient.start()
-
-    def end(self):
-        # if needed, perform some other actions befor ending the software
-        print("ending %s" % (self.clientID))
-        self.myMqttClient.stop()
-
-    def notify(self, topic, msg):
-        # manage here your received message. You can perform some error-check here
-        print("received '%s' under topic '%s'" % (msg, topic))
-
-    def mySubscribe(self, topic: str):
-        self.myMqttClient.mySubscribe(topic)
-        print("Mi sono sottoscritto al topic : {}".format(topic))
-
-    def mySecondPublish(self, topic, msg):
-        self.myMqttClient.myPublish(topic, msg)
-
     def myUnsubscribe(self):
-        if (self.myMqttClient._isSubscriber):
+        if self._isSubscriber:
             # remember to unsuscribe if it is working also as subscriber
-            self.myMqttClient._paho_mqtt.unsubscribe(self.myMqttClient._topic)
+            self._paho_mqtt.unsubscribe(self._topic)
+
+#
+# class IoTPublisher():
+#     def __init__(self, clientID):
+#         # create an instance of MyMQTT class
+#         self.clientID = clientID
+#         self.myMqttClient = MyMQTT(self.clientID, "mqtt.eclipse.org", 1883, self)
+#
+#     def run(self):
+#         # if needed, perform some other actions befor starting the mqtt communication
+#         print("running %s" % (self.clientID))
+#         self.myMqttClient.start()
+#
+#     def end(self):
+#         # if needed, perform some other actions befor ending the software
+#         print("ending %s" % (self.clientID))
+#         self.myMqttClient.stop()
+#
+#     def notify(self, topic, msg):
+#         # manage here your received message. You can perform some error-check here
+#         print("received '%s' under topic '%s'" % (msg, topic))
+#
+#     def mySubscribe(self, topic: str):
+#         self.myMqttClient.mySubscribe(topic)
+#         print("Mi sono sottoscritto al topic : {}".format(topic))
+#
+#     def mySecondPublish(self, topic, msg):
+#         self.myMqttClient.myPublish(topic, msg)
+#
+#     def myUnsubscribe(self):
+#         if (self.myMqttClient._isSubscriber):
+#             # remember to unsuscribe if it is working also as subscriber
+#             self.myMqttClient._paho_mqtt.unsubscribe(self.myMqttClient._topic)
 
 class ValoreJson():
-    def __init__(self, res, v, unit, deviceID = "unregistered"):
+    def __init__(self, res, v, unit, deviceID):
         self.res = res
         self.v = v
         self.unit = unit
         self.deviceId = deviceID
 
     def toString(self):
-        res = {"bn": "unregistered",
+        res = {"bn": self.deviceId,
                "e": {"n": self.res,
                      "v": self.v,
                      "u": self.unit
@@ -106,17 +111,17 @@ class myThread(threading.Thread):
         threading.Thread.__init__(self, name = name)
         self.myTopic = topic
         self.myValue = value
-        self.myClient = IoTPublisher("IOT")
+        self.myClient = MyMQTT(self.name, "mqtt.eclipse.org", 1883, self)
         self.timeToStop = timeToStop
         self.deviceID = "unregistered"
 
     def run(self):
-        self.myClient.run()
+        self.myClient.start()
         self.myClient.mySubscribe(self.myTopic+"/+")
         while True:
             self.myValue += 1
             valore = ValoreJson("temperature", self.myValue, "c", self.deviceID)
-            self.myClient.mySecondPublish(self.myTopic, valore.toString())
+            self.myClient.myPublish(self.myTopic, valore.toString())
             print("sto inviando {}".format(valore.toString()))
             time.sleep(10)
             if timeToStop:
@@ -124,13 +129,19 @@ class myThread(threading.Thread):
 
     def terminate(self):
         self._running = False
+        self.myClient.myUnsubscribe()
+
+    def notify(self, topic, msg):
+        # manage here your received message. You can perform some error-check here
+        print("received '%s' under topic '%s'" % (msg, topic))
+        if topic == self.myTopic + "/res":
+            self.deviceID = msg
+
 
 
 if __name__ == '__main__':
     counterThread = 0
     threads = []
-    client = IoTPublisher("cliente")
-    client.run()
     timeToStop = False
     topic = "/tiot/26/catalog/"
     topicMessage = ""
@@ -151,7 +162,7 @@ if __name__ == '__main__':
                 pass
             else :
                 value = int(input("inserire il valore letto dal device\n"))
-                client.mySecondPublish(topicMessage, value)
+
         elif command == 'a':
             if (topicMessage == ""):
                 print("Hei ti sei dimenticato di inserire il topic. FALLO!")
@@ -168,4 +179,3 @@ if __name__ == '__main__':
         t.timeToStop=True
         t.join()
         #threads[n].terminate()
-    client.end()

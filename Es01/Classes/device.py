@@ -53,7 +53,7 @@ class Device(object):
     return rest
 
   def toString(self):
-    return "{}".format(self.toDict())
+    return json.loads(self)
 
 ##
 # DeviceManager object
@@ -158,19 +158,23 @@ class DeviceManager(object):
       time.sleep(self.TIMEOUT)
 
   # Update an existin device
-  def updateDevice(self, deviceID, timestamp, resource): # per altre info basta aggiungere altri argomenti al metodo
+  def updateDevice(self, deviceID, timestamp, resource = ""): # per altre info basta aggiungere altri argomenti al metodo
+    print("Sono entrato nella funzione update")
     for device in self.devices:
+      print(device.toString())
       if device.getDeviceID() == deviceID:
+        print("MI TROVO NELLA UPDATEDEVICE")
+
         device.updateAtrr(time.time())
         device.addResource(resource)
         self.lock.acquire()
         with open('Database/devices.json', "w") as file:
           json.dump(self.getDevicesForJson(), file)  # json.dump(self.devices, file)
         self.lock.release()
-    else:
-      # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa
-      # lasciare al caso l'avvenuta conferma
-      return 404
+      # else:
+      #   # Da definire come si vuole gestire, ma dal momento che siamo su mqtt penso si possa
+      #   # lasciare al caso l'avvenuta conferma
+      #   return 404
 
   def getNumberOfDevices(self):
     return int(self.n)
