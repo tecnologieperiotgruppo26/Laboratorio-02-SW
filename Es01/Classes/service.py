@@ -4,10 +4,8 @@
 # {
 #   serviceID: "",
 #   description: "",
-#   end_points: {
-#     rest: "",
-#     mqtt: "",
-#   },
+#   rest: "",
+#   mqtt: "",
 #   timestamp: ""
 # }
 
@@ -25,7 +23,8 @@ class Service(object):
   def __init__(self, serviceID, timestamp, description, rest="", mqtt=""):
     self.serviceID = serviceID
     self.description = description
-    self.end_points = {"rest": rest, "mqtt": mqtt}
+    self.rest = rest
+    self.mqtt = mqtt
     self.timestamp = timestamp
     
   def getServiceID(self):
@@ -38,13 +37,13 @@ class Service(object):
     self.timestamp = timestamp
   
   def toDict(self):
-    res = {"serviceID" : "{}".format(self.serviceID),
-            "end_points": {"rest" : "{}".format(self.end_points["rest"]),
-                           "mqtt" : "{}".format(self.end_points["mqtt"])
-                          },
+    res = {
+            "serviceID" : "{}".format(self.serviceID),
+            "rest" : "{}".format(self.rest),
+            "mqtt" : "{}".format(self.mqtt),
             "description" : "{}".format(self.description),
             "timestamp" : "{}".format(self.timestamp)
-            }
+          }
     return res
 
   def toString(self):
@@ -64,12 +63,15 @@ class ServiceManager(object):
     # Controllo json
     if os.path.exists('Database/services.json'):
       with open('Database/services.json') as f:
-        tmp = dict(json.loads(f.read()))['services']
-        for obj in tmp:
-          self.services.append(Service(obj['serviceID'],obj['timestamp'],obj['description'],obj['end_points']['rest'],obj['end_points']['mqtt']))
-        # Mantiene consistenza nella numerazione degli elementi
-        if len(self.services):
-          self.n = int(self.services[-1].getServiceID()) + 1
+        if os.path.getsize('Database/services.json') > 0:
+          tmp = dict(json.loads(f.read()))['services']
+          for obj in tmp:
+            self.services.append(Service(obj['serviceID'],obj['timestamp'],obj['description'],obj['rest'],obj['mqtt']))
+          # Mantiene consistenza nella numerazione degli elementi
+          if len(self.services):
+            self.n = int(self.services[-1].getServiceID()) + 1
+        else:
+          f.write('{"services":[]}')
     else:
       with open('Database/services.json', "w") as f:
         f.write('{"services":[]}')
@@ -90,6 +92,7 @@ class ServiceManager(object):
     
   # Add service
   def addService(self, timestamp, description, rest="", mqtt=""):
+    print("Sto per aggiungere un nuovo servizio")
     serviceID = self.n
     service = Service(serviceID, timestamp, description, rest=rest, mqtt=mqtt)
     self.services.append(service)

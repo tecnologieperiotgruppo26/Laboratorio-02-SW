@@ -70,12 +70,15 @@ class DeviceManager(object):
     # Controllo json
     if os.path.exists('Database/devices.json'):
       with open('Database/devices.json') as f:
-        tmp = dict(json.loads(f.read()))['devices']
-        for obj in tmp:
-          self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['resources'],obj['rest'],obj['mqtt']))
-        # Mantiene consistenza nella numerazione degli elementi
-        if len(self.devices):
-          self.n = int(self.devices[-1].getDeviceID()) + 1
+        if os.path.getsize('Database/devices.json') > 0:
+          tmp = dict(json.loads(f.read()))['devices']
+          for obj in tmp:
+            self.devices.append(Device(obj['deviceID'],obj['timestamp'],obj['resources'],obj['rest'],obj['mqtt']))
+          # Mantiene consistenza nella numerazione degli elementi
+          if len(self.devices):
+            self.n = int(self.devices[-1].getDeviceID()) + 1
+        else:
+          f.write('{"devices":[]}')
     else:
       with open('Database/devices.json', "w") as f:
         f.write('{"devices":[]}')

@@ -57,10 +57,8 @@ class Catalog(object):
     self.userManager = UserManager()
     self.serviceManager = ServiceManager()
     self.MQTTManager = ClientMQTT("Server", self.deviceManager)
-    baseTopic = "/tiot/26/catalog/"
     self.MQTTManager.run()
-    self.MQTTManager.mySubscribe(baseTopic + "#")
-
+    self.MQTTManager.mySubscribe(self.messageBroker.getMessageBrokerCatalogTopic() + "#")
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
@@ -118,7 +116,7 @@ class Catalog(object):
     listaNotifyMQTT = []
     if uri[0]=="messagebroker" and flag:
       if uri[1]=="new":
-        self.messageBroker.addMessageBroker(params['url'],params['port'])
+        self.messageBroker.addMessageBroker(params['url'],params['port'],params['catalogTopic'])
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     elif uri[0]=="devices" and flag:
@@ -127,6 +125,14 @@ class Catalog(object):
         return f"{res}"
       elif isIDvalid(uri[1]) and int(uri[1]) < self.deviceManager.getNumberOfDevices():
         self.deviceManager.updateDevice(int(uri[1]), time.time())
+      else:
+        raise cherrypy.HTTPError(404, "Bad Request!")
+    elif uri[0]=="services" and flag:
+      if uri[1]=="new":
+        res = self.serviceManager.addService(time.time(), params['description'], rest=params['rest'],mqtt=params['mqtt'])
+        return f"{res}"
+      elif isIDvalid(uri[1]) and int(uri[1]) < self.serviceManager.getNumberOfServices():
+        self.serviceManager.updateDevice(int(uri[1]), time.time())
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     # listaNotifyMQTT = self.MQTTManager.notify()

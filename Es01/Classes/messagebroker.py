@@ -15,9 +15,10 @@ import json
 ##
 class MessageBroker(object):
 
-  def __init__(self, url, port):
+  def __init__(self, url, port, catalogTopic):
     self.url = url
     self.port = port
+    self.catalogTopic = catalogTopic
 
   def getMessageBroker(self):
     return json.dumps(self)
@@ -40,6 +41,10 @@ class MessageBrokerManager(object):
       # Store object in mb.json
       with open('Database/mb.json', "w") as file:
         json.dump(self.messageBroker, file)
+
+  # Get catalog topic
+  def getMessageBrokerCatalogTopic(self):
+    return self.messageBroker['catalogTopic']
 
   def getMessageBroker(self):
     return json.dumps(self.messageBroker)
