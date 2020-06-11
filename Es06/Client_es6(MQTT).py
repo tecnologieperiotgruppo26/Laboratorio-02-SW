@@ -93,10 +93,10 @@ class ValoreJson():
         self.deviceId = deviceID
 
     def toString(self):
-        res = {"deviceID": "unregistered",
-               "resource": {"res": self.res,
-                            "value": self.v,
-                            "unit": self.unit
+        res = {"bn": "unregistered",
+               "e": {"n": self.res,
+                     "v": self.v,
+                     "u": self.unit
                             }
                 }
         return json.dumps(res)
