@@ -58,7 +58,7 @@ class Catalog(object):
     self.serviceManager = ServiceManager()
     self.MQTTManager = ClientMQTT("Server", self.deviceManager)
     self.MQTTManager.run()
-    self.MQTTManager.mySubscribe(self.messageBroker.getMessageBrokerCatalog() + "#")
+    self.MQTTManager.mySubscribe(self.messageBroker.getMessageBrokerCatalogTopic() + "#")
 
   def GET(self, *uri, **params):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
@@ -125,6 +125,14 @@ class Catalog(object):
         return f"{res}"
       elif isIDvalid(uri[1]) and int(uri[1]) < self.deviceManager.getNumberOfDevices():
         self.deviceManager.updateDevice(int(uri[1]), time.time())
+      else:
+        raise cherrypy.HTTPError(404, "Bad Request!")
+    elif uri[0]=="services" and flag:
+      if uri[1]=="new":
+        res = self.serviceManager.addService(time.time(), params['descroption'], rest=params['rest'],mqtt=params['mqtt'])
+        return f"{res}"
+      elif isIDvalid(uri[1]) and int(uri[1]) < self.serviceManager.getNumberOfServices():
+        self.serviceManager.updateDevice(int(uri[1]), time.time())
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
     # listaNotifyMQTT = self.MQTTManager.notify()

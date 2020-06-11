@@ -43,8 +43,8 @@ class MessageBrokerManager(object):
         json.dump(self.messageBroker, file)
 
   # Get catalog topic
-  def getMessageBrokerCatalog(self):
-    return json.dumps(self.messageBroker.catalogTopic)
+  def getMessageBrokerCatalogTopic(self):
+    return self.messageBroker['catalogTopic']
 
   def getMessageBroker(self):
     return json.dumps(self.messageBroker)
