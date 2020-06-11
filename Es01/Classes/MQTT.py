@@ -78,8 +78,8 @@ class ClientMQTT():
         mqtt = str(topic[0]).split('/')[-1]
         print(mqtt)
         obj = dict(json.loads(msg))
-        deviceID = obj['deviceID']
-        resources = [obj['resource']]
+        deviceID = obj['bn']
+        resources = [obj['e']]
         #if msg["deviceID"] == "unregistered":
         self.deviceManager.addDevice(time.time(), resources, rest=[''], mqtt=[mqtt])
         #     self.myPublish(topic + "/res", str(idNew))
