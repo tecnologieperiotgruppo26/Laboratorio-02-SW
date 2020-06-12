@@ -24,6 +24,15 @@
 # - /users/:userID        Retrieve a specific user with a userID
 # POST
 # - /users/new            Add a new user
+#
+#
+# Services
+#
+# GET
+# - /services
+# - /services/:serviceID
+# POST
+# - /services/new
 
 
 import cherrypy
