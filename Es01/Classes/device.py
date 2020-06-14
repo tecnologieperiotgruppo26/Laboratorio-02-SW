@@ -179,9 +179,69 @@ class DeviceManager(object):
   def getNumberOfDevices(self):
     return int(self.n)
 
-#File "C:\Users\emanu\Desktop\PoliTo\Semestre 4-2\IoT\Laboratorio\Laboratorio-02-SW\Es01\Classes\device.py", line 115, in removeDevices
-#    json.dump(self.devices, file)
-#File "C:\Users\emanu\AppData\Local\Programs\Python\Python38-32\lib\json\__init__.py", line 179, in dump
-#   for chunk in iterable:
-#raise TypeError(f'Object of type {o.__class__.__name__} '
-#TypeError: Object of type Device is not JSON serializable
+  def getTemperature(self):
+    temperature = 0
+    for device in self.devices:
+      if device.resources[-1]["n"] == "temperature" or device.resources[-1]["n"] == "tmp":
+        temperature = device.resources[-1]["v"]
+    return temperature
+
+  def getAverageTemperature(self):
+    temperature = 0
+    cnt = 0
+    for device in self.devices:
+      if device.resources[-1]["n"] == "temperature" or device.resources[-1]["n"] == "tmp":
+        for x in range(0, len(device.resources)):
+          if device.resources[-1]["n"] == "temperature" or device.resources[-1]["n"] == "tmp":
+            temperature += device.resources[x]["v"]
+            cnt += 1
+    return temperature/cnt
+
+  def getLighting(self):
+    light = 2
+    for device in self.devices:
+      if device.resources[-1]["n"] == "light":
+        light = device.resources[-1]["v"]
+    if light == 0:
+      return "Light off!"
+    elif light == 1:
+      return "Light on!"
+    else:
+      return "Light never initialized, set your light!"
+
+  def getHeating(self):
+    heat = 256
+    for device in self.devices:
+      if device.resources[-1]["n"] == "led":
+        heat = device.resources[-1]["v"]
+    if heat == 0:
+      return "Heating off!"
+    elif heat in range(1, 255):
+      return "Heating working at {}%!".format(heat)
+    else:
+      return "Heating never initialized, set your heat!"
+
+  def getCooling(self):
+    fan = 256
+    for device in self.devices:
+      if device.resources[-1]["n"] == "fan":
+        fan = device.resources[-1]["v"]
+    if fan == 0:
+      return "Cooling off!"
+    elif fan in range(1, 255):
+      return "Cooling working at {}%!".format(fan)
+    else:
+      return "Cooling never initialized, set your cool!"
+
+  def getPresence(self):
+    presence = 2
+    for device in self.devices:
+      if device.resources[-1]["n"] == "pres":
+        presence = device.resources[-1]["v"]
+    if presence == 0:
+      return "No people at home!"
+    elif presence == 1:
+      return "Some people at home!"
+    else:
+      return "I do not know if there someone at home, never initialized that! Upgrade it!"
+

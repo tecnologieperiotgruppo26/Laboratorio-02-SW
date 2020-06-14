@@ -33,7 +33,14 @@
 # - /services/:serviceID
 # POST
 # - /services/new
-
+#
+# DEVICES DATA
+# - /temperature
+# - /avgtemperature
+# - /heating
+# - /cooling
+# - /presence
+# - /lighting
 
 import cherrypy
 import os
@@ -109,13 +116,35 @@ class Catalog(object):
           raise cherrypy.HTTPError(404, "Bad Request!")
       elif uri[0]=="services":
         return self.serviceManager.getServices()
+
+      # GET DATA FROM DEVICES
+
+      elif uri[0]=="temperature":
+        return self.deviceManager.getTemperature()
+      elif uri[0]=="heating":
+        return self.deviceManager.getHeating()
+      elif uri[0] == "avgtemperature":
+        return self.deviceManager.getAverageTemperature()
+      elif uri[0] == "cooling":
+        return self.deviceManager.getCooling()
+      elif uri[0] == "presence":
+        return self.deviceManager.getPresence()
+      elif uri[0] == "lightining":
+        return self.deviceManager.getLighting()
+
     #else generico per "homepage"
     else:
       menu = "GET httpREST<br/>" \
              "<dl>/devices -> retrieve all the registered devices<br/>" \
              "<dl>/devices/[deviceId] -> retrieve a specific device<br/>" \
              "<dl>/users -> retrieve all the registered users<br/>" \
-             "<dl>/users/:urserId -> retrieve a specific user<br/>"
+             "<dl>/users/:userId -> retrieve a specific user<br/>" \
+             "<dl>/temperature -> retrieve last temperature<br/>" \
+             "<dl>/cooling -> retrieve value % of cooler<br/>" \
+             "<dl>/presence -> retrieve presence<br/>" \
+             "<dl>/lighting -> retrieve value of led<br/>" \
+             "<dl>/heating -> retrieve value % of heat<br/>" \
+             "<dl>/avgtemperature -> retrieve avg of temperature<br/>"
       return "{}".format(menu)
 
   def POST(self, *uri, **params):
