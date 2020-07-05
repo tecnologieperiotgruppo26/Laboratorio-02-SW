@@ -74,7 +74,9 @@ class ClientMQTT():
         self.myMqttClient.stop()
 
     def notify(self, topic, msg):
-        # manage here your received message. You can perform some error-check here
+        # lo scopo di questa funzione è ricevere messaggi da arduino e gestire tutte le risorse che arrivano,
+        #allocandole nel giusto modo all'interno del catalog e in caso ce ne sia bisogno rispedire indietro
+        #il nuovo id che arduino andrà ad associare alla risorsa per le future comunicazioni
         end_point = str(topic).split('/')[-1]
         print(topic)
         print(end_point)
@@ -84,12 +86,22 @@ class ClientMQTT():
         lista = [resources]
         print(deviceID)
         print(resources)
-        if deviceID == "unregistered":
+        if deviceID == "unregistered" and obj['c'] == 0:
             idNew = self.deviceManager.addDevice(time.time(), lista, rest=[''], mqtt=end_point)
-            self.myPublish(topic + "/res", str(idNew))
+            #creo json per inviare ad arduino il nuovo id della risorsa
+            #per scindere le richieste come diceva Simo, c'è il campo dedicato c,
+            #0 per i messaggi VERSO il catalog, 1 per quelli verso arduino
+            jsonresp ={'bn': idNew,
+                       'e': {'n': resources['n'],
+                             'v': -100,
+                             'u': ''},
+                       'c': 1
+            }
+            self.myPublish(topic + "/res", json.dumps(jsonresp))
         else:
-            print("sono nell'else")
-            self.deviceManager.updateDevice(obj["bn"], time.time(), resources)
+            if obj['c']==0:
+                print("sono nell'else")
+                self.deviceManager.updateDevice(obj["bn"], time.time(), resources)
 
     def mySubscribe(self, topic: str):
         self.myMqttClient.mySubscribe(topic)

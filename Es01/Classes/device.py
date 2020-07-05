@@ -200,7 +200,7 @@ class DeviceManager(object):
   def getLighting(self):
     light = 2
     for device in self.devices:
-      if device.resources[-1]["n"] == "light":
+      if device.resources[-1]["n"] == "led":
         light = device.resources[-1]["v"]
     if light == 0:
       return "Light off!"
@@ -212,7 +212,7 @@ class DeviceManager(object):
   def getHeating(self):
     heat = 256
     for device in self.devices:
-      if device.resources[-1]["n"] == "led":
+      if device.resources[-1]["n"] == "heat":
         heat = device.resources[-1]["v"]
     if heat == 0:
       return "Heating off!"

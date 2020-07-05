@@ -2,6 +2,7 @@ import paho.mqtt.client as PahoMQTT
 import time
 import threading
 import json
+import random
 
 class MyMQTT:
     # praicamente da quel che ho capito sta classe è un qualcosa di più specifico rispetto ad un publisher
@@ -57,54 +58,13 @@ class MyMQTT:
             # remember to unsuscribe if it is working also as subscriber
             self._paho_mqtt.unsubscribe(self._topic)
 
-#
-# class IoTPublisher():
-#     def __init__(self, clientID):
-#         # create an instance of MyMQTT class
-#         self.clientID = clientID
-#         self.myMqttClient = MyMQTT(self.clientID, "mqtt.eclipse.org", 1883, self)
-#
-#     def run(self):
-#         # if needed, perform some other actions befor starting the mqtt communication
-#         print("running %s" % (self.clientID))
-#         self.myMqttClient.start()
-#
-#     def end(self):
-#         # if needed, perform some other actions befor ending the software
-#         print("ending %s" % (self.clientID))
-#         self.myMqttClient.stop()
-#
-#     def notify(self, topic, msg):
-#         # manage here your received message. You can perform some error-check here
-#         print("received '%s' under topic '%s'" % (msg, topic))
-#
-#     def mySubscribe(self, topic: str):
-#         self.myMqttClient.mySubscribe(topic)
-#         print("Mi sono sottoscritto al topic : {}".format(topic))
-#
-#     def mySecondPublish(self, topic, msg):
-#         self.myMqttClient.myPublish(topic, msg)
-#
-#     def myUnsubscribe(self):
-#         if (self.myMqttClient._isSubscriber):
-#             # remember to unsuscribe if it is working also as subscriber
-#             self.myMqttClient._paho_mqtt.unsubscribe(self.myMqttClient._topic)
+    def notify(self, topic, msg):
+        #SE I MESSAGGI TI ARRIVANO QUI L'IMPORTANTE è METTERE LA RISORSA DA AGGIORNARE CHE
+        #POI RICHIAMI DA FUORI CON UNA GET
+        print("received '%s' under topic '%s'" % (msg, topic))
+#        if topic == self.myTopic + "/res":
+#            self.deviceID = msg
 
-class ValoreJson():
-    def __init__(self, res, v, unit, deviceID):
-        self.res = res
-        self.v = v
-        self.unit = unit
-        self.deviceId = deviceID
-
-    def toString(self):
-        res = {"bn": self.deviceId,
-               "e": {"n": self.res,
-                     "v": self.v,
-                     "u": self.unit
-                            }
-                }
-        return json.dumps(res)
 
 class myThread(threading.Thread):
     def __init__(self, name, topic, value, timeToStop):
@@ -130,12 +90,6 @@ class myThread(threading.Thread):
     def terminate(self):
         self._running = False
         self.myClient.myUnsubscribe()
-
-    def notify(self, topic, msg):
-        # manage here your received message. You can perform some error-check here
-        print("received '%s' under topic '%s'" % (msg, topic))
-        if topic == self.myTopic + "/res":
-            self.deviceID = msg
 
 
 
@@ -179,3 +133,33 @@ if __name__ == '__main__':
         t.timeToStop=True
         t.join()
         #threads[n].terminate()
+
+#
+#
+#
+#
+#THREAD CON SEMAFORO
+class semaphore_thread (threading.Thread):
+
+    available_tables = ['A', 'B', 'C', 'D', 'E']      #ipotizziamo la presenza di 5 casse e 15 utenti.
+
+    def __init__(self, thread_name, semaphore):
+        threading.Thread.__init__(self, name=thread_name)
+        self.sleep_time = random.randint(3, 7)
+        self.thread_sempaphore = semaphore
+
+    def run(self):
+        #acquire a semaphore, print something e release a semaphore
+        self.thread_sempaphore.acquire()
+        table = semaphore_thread.available_tables.pop()
+        """
+        ora qui posso inserire il codice del comportamento del thread. 
+        prima gli ho dato l'accesso alla risorsa tramite semaforo e subito dopo 
+        aver fatto cose lo rilascio
+        """
+        print(f"Thread {self.getName()} ha avuto accesso alla cassa {table}, e si appresta a pagare per poi uscire")
+        time.sleep(self.sleep_time)
+        print(f"Thread {self.getName()} ha finito di pagare in {self.sleep_time} secondi ed esce! {table} è libera!")
+        semaphore_thread.available_tables.append(table)
+        self.thread_sempaphore.release()
+
