@@ -185,12 +185,6 @@ class Catalog(object):
         return f"{res}"
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
-    # listaNotifyMQTT = self.MQTTManager.notify()
-    # if listaNotifyMQTT:
-    #   mqtt = str(listaNotifyMQTT[0]).split('/')[-1]
-    #   self.deviceManager.addDevice(time.time(), params[json.dumps(listaNotifyMQTT[1])], rest=params[''], mqtt=params[mqtt])
-    #   listaNotifyMQTT.pop(1)
-    #   listaNotifyMQTT.pop(0)
 
 if __name__ == '__main__': 
   conf = {
