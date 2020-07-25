@@ -1,13 +1,15 @@
 # Documentazione ENDPOINT
 
+##
 # Message Broker
 #
 # GET
 # - /messagebroker          Retrieve all the registered devices
 # POST
 # - /messagebroker/new      Add a new message broker
-# 
-#
+##
+
+##
 # Devices
 #
 # GET
@@ -15,8 +17,9 @@
 # - /devices/:deviceId      Retrieve a specific device with a deviceID
 # POST
 # - /devices/new            Add a new device
-#
-#
+##
+
+##
 # Users
 #
 # GET
@@ -24,8 +27,9 @@
 # - /users/:userID        Retrieve a specific user with a userID
 # POST
 # - /users/new            Add a new user
-#
-#
+##
+
+##
 # Services
 #
 # GET
@@ -33,7 +37,9 @@
 # - /services/:serviceID
 # POST
 # - /services/new
-#
+##
+
+##
 # DEVICES DATA
 # - /temperature
 # - /avgtemperature
