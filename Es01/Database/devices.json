@@ -1,1 +1,1 @@
-{"devices": [{"deviceID": "0", "rest": "['']", "mqtt": "tmp", "resources": [{"n": "temperature", "v": 1, "u": "c"}, {"n": "temperature", "v": 2, "u": "c"}, {"n": "temperature", "v": 3, "u": "c"}, {"n": "temperature", "v": 4, "u": "c"}], "timestamp": "1592766830.2734306"}]}
+{"devices": []}

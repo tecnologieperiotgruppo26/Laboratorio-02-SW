@@ -202,11 +202,11 @@ class DeviceManager(object):
       if device.resources[-1]["n"] == "led":
         light = device.resources[-1]["v"]
     if light == 0:
-      return "Light off!"
+      return 0
     elif light == 1:
-      return "Light on!"
+      return 1
     else:
-      return "Light never initialized, set your light!"
+      return -1
 
   def getHeating(self):
     heat = 256
@@ -214,11 +214,11 @@ class DeviceManager(object):
       if device.resources[-1]["n"] == "heat":
         heat = device.resources[-1]["v"]
     if heat == 0:
-      return "Heating off!"
+      return heat
     elif heat in range(1, 255):
-      return "Heating working at {}%!".format(heat)
+      return heat
     else:
-      return "Heating never initialized, set your heat!"
+      return -1
 
   def getCooling(self):
     fan = 256
@@ -226,11 +226,11 @@ class DeviceManager(object):
       if device.resources[-1]["n"] == "fan":
         fan = device.resources[-1]["v"]
     if fan == 0:
-      return "Cooling off!"
+      return 0
     elif fan in range(1, 255):
-      return "Cooling working at {}%!".format(fan)
+      return fan
     else:
-      return "Cooling never initialized, set your cool!"
+      return -1
 
   def getPresence(self):
     presence = 2
@@ -238,9 +238,9 @@ class DeviceManager(object):
       if device.resources[-1]["n"] == "pres":
         presence = device.resources[-1]["v"]
     if presence == 0:
-      return "No people at home!"
+      return 0
     elif presence == 1:
-      return "Some people at home!"
+      return 1
     else:
-      return "I do not know if there someone at home, never initialized that! Upgrade it!"
+      return -1
 
