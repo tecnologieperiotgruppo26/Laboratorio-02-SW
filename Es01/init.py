@@ -80,7 +80,6 @@ class Catalog(object):
     # Il metodo GET serve solo per la visualizzazione di infrmazioni del Catalog, per le aggiunte utilizzare POST
     # Questo flag mi indica se uri ha lunghezza maggiore di 1
     flag = isUriMultiple(uri)
-    #errore qui sotto : IndexError: tuple index out of range, se faccio l'accesso a localhost ritora un 500
     if uri:
       if uri[0]=="messagebroker":
         return self.messageBroker.getMessageBroker()
@@ -190,9 +189,7 @@ if __name__ == '__main__':
   }
   cherrypy.tree.mount(Catalog(), '/', conf) 
   cherrypy.engine.start()
-  #cherrypy.engine.block()
   input()
   Catalog().MQTTManager.end()
   Catalog().deviceManager.__del__()
   cherrypy.engine.stop()
-  #Catalog().deviceManager.__del__()
