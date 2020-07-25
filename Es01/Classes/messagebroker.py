@@ -2,8 +2,9 @@
 #
 # Formato json:
 # {
-#   "ip": "",
-#   "port": ""
+#   "url": "",
+#   "port": "",
+#   "catalogTopic": ""
 # }
 
 import datetime

@@ -104,7 +104,6 @@ class DeviceManager(object):
     print("Sto per aggiungere un nuovo device")
     deviceID = self.n
     device = Device(deviceID, timestamp, resources, rest=rest, mqtt=mqtt)
-    print(type(resources))
     self.devices.append(device)
     self.n += 1
 
