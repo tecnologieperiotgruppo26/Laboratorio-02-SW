@@ -73,7 +73,7 @@ class UserManager(object):
         f.write('{"users":[]}')
 
   # Add user
-  def addUser(self, userID, name, surname, email):
+  def addUser(self, name, surname, email):
     userID = self.n
     user = User(userID, name, surname, email)
     self.users.append(user)

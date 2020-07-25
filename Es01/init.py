@@ -179,6 +179,12 @@ class Catalog(object):
         self.serviceManager.updateService(int(uri[1]), time.time())
       else:
         raise cherrypy.HTTPError(404, "Bad Request!")
+    elif uri[0]=="users" and flag:
+      if uri[1]=="new":
+        res = self.userManager.addUser(params['name'],params['surname'],params['email'])
+        return f"{res}"
+      else:
+        raise cherrypy.HTTPError(404, "Bad Request!")
     # listaNotifyMQTT = self.MQTTManager.notify()
     # if listaNotifyMQTT:
     #   mqtt = str(listaNotifyMQTT[0]).split('/')[-1]
